@@ -40,6 +40,13 @@ INSTALLED_APPS = [
 
     'django.contrib.sites',  # allauth
 
+    'graduation',
+    'history',
+    'lecture',
+    'schedule',
+    'student',
+    'university',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -86,7 +93,7 @@ WSGI_APPLICATION = 'campy.wsgi.application'
 DATABASES = {
     'default': {
          'ENGINE': 'django.db.backends.mysql',
-         'NAME': 'campy', # CREATE DATABASE campy default CHARACTER SET UTF8; # DROP DATABASE campy
+         'NAME': 'campy2', # CREATE DATABASE campy default CHARACTER SET UTF8; # DROP DATABASE campy
          'USER': 'root',
          'PASSWORD': 'applemac',
          'HOST': '127.0.0.1',
