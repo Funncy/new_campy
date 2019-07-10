@@ -44,9 +44,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
-
-    # The general purpose templates
-    'django_adminlte',
 ]
 
 MIDDLEWARE = [
