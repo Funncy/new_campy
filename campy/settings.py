@@ -47,12 +47,6 @@ INSTALLED_APPS = [
 
     # The general purpose templates
     'django_adminlte',
-
-    # Optional: Skin for the admin interface
-    'django_adminlte_theme',
-
-    # Any apps which need to have their templates overridden by adminlte
-    'django.contrib.admin',
 ]
 
 MIDDLEWARE = [
@@ -128,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ko'
 
-TIME_ZONE = 'Asia/seoul'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 

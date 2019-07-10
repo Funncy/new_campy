@@ -1,0 +1,318 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>CAMPY</title>
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.css">
+    <link rel="stylesheet" href="{% static 'plugins/datepicker/datepicker3.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/colorpicker/bootstrap-colorpicker.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/timepicker/bootstrap-timepicker.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/bootstrap/3.3.2/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/font-awesome/4.7.0/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/ionicons/2.0.1/css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/bootstrap-plugins/AdminLTE/2.4.12/dist/css/AdminLTE.min.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/bootstrap-plugins/AdminLTE/2.4.12/dist/css/skins/skin-blue.min.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/bootstrap-plugins/bootstrap-select/1.13.9/dist/css/bootstrap-select.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" /> -->
+
+    <link rel="stylesheet" href="{% static 'dist/fullcalendar/4.2.0/packages/core/main.css' %}"/>
+    <link rel="stylesheet" href="{% static 'dist/fullcalendar/4.2.0/packages/daygrid/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'dist/fullcalendar/4.2.0/packages/core/main.css' %}"/>
+    <link rel="stylesheet" href="{% static 'dist/fullcalendar/4.2.0/packages/daygrid/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'dist/fullcalendar/4.2.0/timegrid/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'dist/fullcalendar/4.2.0packages/list/main.css' %}" />
+
+
+
+    <script src="{% static 'dist/jquery/3.4.1/jquery.min.js' %}"></script>
+    <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
+    <script src="{% static 'dist/bootstrap/3.3.2/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'dist/bootstrap-plugins/AdminLTE/2.4.12/dist/js/adminlte.min.js' %}"></script>
+    <script src="{% static 'dist/bootstrap-plugins/bootstrap-select/1.13.9/dist/js/bootstrap-select.min.js' %}"></script>
+    <script src="{% static 'dist/bootstrap-plugins/bootstrap-select/1.13.9/dist/js/i18n/defaults-ko_KR.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js"></script>
+
+    <script src="{% static 'dist/fullcalendar/4.2.0/packages/core/main.js' %}"></script>
+    <script src="{% static 'dist/fullcalendar/4.2.0/packages/interaction/main.js' %}"></script>
+    <script src="{% static 'dist/fullcalendar/4.2.0/packages/daygrid/main.js' %}"></script>
+    <script src="{% static 'dist/fullcalendar/4.2.0/packages/timegrid/main.js' %}"></script>
+    <script src="{% static 'dist/fullcalendar/4.2.0/packages/list/main.js' %}"></script>
+
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var initialTimeZone = 'local';
+        var timeZoneSelectorEl = document.getElementById('time-zone-selector');
+        var loadingEl = document.getElementById('loading');
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          plugins: [ 'interaction', 'timeGrid', 'list' ],
+          timeZone: initialTimeZone,
+          defaultDate: new Date(),
+          header: {
+            // left: 'prev,next today',
+            // center: 'title',
+            // right: 'timeGridWeek'
+            left: '',
+            center: '',
+            right: ''
+          },
+          navLinks: true, // can click day/week names to navigate views
+          editable: true,
+          selectable: true,
+          eventLimit: true, // allow "more" link when too many events
+          events: {
+            url: 'php/get-events.php',
+            failure: function() {
+              document.getElementById('script-warning').style.display = 'inline'; // show
+            }
+          },
+          loading: function(bool) {
+            if (bool) {
+              loadingEl.style.display = 'inline'; // show
+            } else {
+              loadingEl.style.display = 'none'; // hide
+            }
+          },
+
+          eventTimeFormat: { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' },
+
+          dateClick: function(arg) {
+            console.log('dateClick', calendar.formatIso(arg.date));
+          },
+          select: function(arg) {
+            console.log('select', calendar.formatIso(arg.start), calendar.formatIso(arg.end));
+          }
+        });
+
+        calendar.render();
+
+        // load the list of available timezones, build the <select> options
+        // it's HIGHLY recommended to use a different library for network requests, not this internal util func
+        // FullCalendar.requestJson('GET', 'php/get-time-zones.php', {}, function(timeZones) {
+
+        //   timeZones.forEach(function(timeZone) {
+        //     var optionEl;
+
+        //     if (timeZone !== 'UTC') { // UTC is already in the list
+        //       optionEl = document.createElement('option');
+        //       optionEl.value = timeZone;
+        //       optionEl.innerText = timeZone;
+        //       timeZoneSelectorEl.appendChild(optionEl);
+        //     }
+        //   });
+        // }, function() {
+        //   // TODO: handle error
+        // });
+
+        // when the timezone selector changes, dynamically change the calendar option
+        timeZoneSelectorEl.addEventListener('change', function() {
+          calendar.setOption('timeZone', this.value);
+        });
+      });
+
+    </script>
+
+      <!-- 장고 csrf ajax 통신용 스크립트-->
+      <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+              var cookies = document.cookie.split(';');
+              for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+                }
+              }
+            }
+            return cookieValue;
+          }
+          function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+          }
+          $(document).ready(function() {
+            var csrftoken = getCookie('csrftoken');
+            $.ajaxSetup({
+              beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                  xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+              }
+            });
+          });
+      </script><!-- 장고 csrf ajax 통신용 스크립트-->
+
+
+    <style>
+    select.form-control {
+      -webkit-appearance: menulist;
+    }
+    </style>
+</head>
+
+
+<body class="hold-transition skin-blue sidebar-mini">
+
+<div class="wrapper">
+
+  <!-- Main Header -->
+  <header class="main-header">
+
+    <!-- Logo -->
+    <a href="{% url 'index' %}" class="logo">
+      <span class="logo-mini"><b>CAM</b></span>
+      <span class="logo-lg"><b>CAMPY</b></span>
+    </a>
+
+    <nav class="navbar navbar-static-top" role="navigation">
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+    <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- User Account Menu -->
+                    {% if user.is_authenticated %}
+                    <li class="dropdown user user-menu">
+                        <!-- Menu Toggle Button -->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <!-- The user image in the navbar-->
+                            <img src="{% static 'img/icon/person-placeholder.jpg'  %}" class="user-image" alt="User Image">
+                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                            <span class="hidden-xs">
+                                {% if user.is_staff %}
+                                    관리자 님
+                                {% else %}
+                                    {{ user.first_name }}{{ user.last_name }} 님
+                                {% endif %}
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- The user image in the menu -->
+                            <li class="user-header">
+                                <img src="{% static 'img/icon/person-placeholder.jpg'  %}" class="img-circle" alt="User Image">
+
+                                <p>
+
+                                    {% if student %}
+                                             <p>{{ user.first_name }}{{ user.last_name }}
+                                                <small>{{ student.student_university_name }} / {{ student.student_major_name }}</small>
+                                             </p>
+                                    {% else %}
+                                        {% if user.is_staff %}
+                                            관리자 님
+                                        {% else %}
+                                            대학을 설정해주세요.
+                                        {% endif %}
+                                    {% endif %}
+                                </p>
+                            </li>
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="{% url 'mypage' %}" class="btn btn-default btn-flat">마이페이지</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="{% url 'account_logout' %}" class="btn btn-default btn-flat">로그아웃</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="{% url 'login' %}">
+                            <!-- The user image in the navbar-->
+                            <i class="fa fa-key"></i>
+                            <span class="hidden-xs">로그인</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <!-- Control Sidebar Toggle Button -->
+                    <li>
+                        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                    </li>
+                </ul>
+            </div>
+    </nav>
+  </header>
+  <aside class="main-sidebar">
+
+    <section class="sidebar">
+
+     <!-- Sidebar user panel (optional) -->
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="{% static 'img/icon/person-placeholder.jpg' %}" class="img-circle" alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    {% if user.is_authenticated %}
+                        {% if user.is_staff %}
+                            <p>관리자 님</p>
+                        {% else %}
+                             <p>{{ user.first_name }}{{ user.last_name }} 님</p>
+                        {% endif %}
+                        <!-- Status -->
+                        {% if student %}
+                                <a href="{% url 'mypage' %}">{{ student.student_university_name }} / {{ student.student_major_name }}</a>
+                        {% else %}
+                            {% if user.is_staff %}
+                                 <a href="{% url 'mypage' %}">관리자</a>
+                            {% else %}
+                                <a href="{% url 'mypage' %}"> 대학을 설정해주세요. </a>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        <p>손님</p>
+                        <!-- Status -->
+                        <a href="{% url 'login' %}">로그인이 필요합니다</a>
+                    {% endif %}
+                </div>
+            </div>
+
+      <form action="#" method="get" class="sidebar-form">
+
+      </form>
+
+      <ul class="sidebar-menu" data-widget="tree">
+        <li class="header"> 대학 생활</li>
+        <li class="{% if courseActive %}active{% endif %}"><a href="{% url 'course' %}"><i class="fa fa-calendar"></i> <span>수강설계</span></a></li>
+        <li class="{% if graduationActive %}active{% endif %}"><a href="{% url 'graduation' %}"><i class="fa fa-graduation-cap"></i> <span>졸업진단</span></a></li>
+        <li class="{% if communityActive %}active{% endif %}"><a href="{% url 'community' %}"><i class="fa  fa-comments-o"></i> <span>커뮤니티</span></a></li>
+
+        <li class="header"> 내 정보</li>
+        <li class="{% if historyActive %}active{% endif %}"><a href="{% url 'history' %}"><i class="fa fa-file-text-o"></i> <span>수강 이력 관리</span></a></li>
+        <li class="{% if mypageActive %}active{% endif %}"><a href="{% url 'mypage' %}"><i class="fa fa-cog"></i> <span>내 정보 관리</span></a></li>
+
+        {% if user.is_staff %}
+        <li class="header"> 관리 메뉴</li>
+        <li class="treeview">
+                    <a href="#!"><i class="fa fa-university"></i> <span>시스템 관리</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{% if subjectGroupActive %}active{% endif %}"><a href="{% url 'subject_group' %}">과목 그룹 관리</a></li>
+                        <li class="{% if ruleActive %}active{% endif %}"><a href="{% url 'rule' %}">졸업 요건 관리</a></li>
+                        <li class="{% if subjectActive %}active{% endif %}"><a href="{% url 'subject' %}">과목 관리</a></li>
+                        <li class="{% if generalActive %}active{% endif %}"><a href="{% url 'general' %}">일반 설정 관리</a></li>
+                    </ul>
+        </li>
+        {% endif %}
+      </ul>
+    </section>
+
+  </aside>
