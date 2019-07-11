@@ -1,0 +1,232 @@
+{% load static %}
+{% include "include/header.html" %}
+
+
+<!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>수강 이력
+        <small>Subject Records</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 수강 이력</a></li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h4 class="title">수강 이력</h4>
+        </div>
+          <div class="box-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-bordered table-striped table-hover text-center" >
+                        <thead>
+                            <tr>
+                                <th style="width: 250px">과목 이름</th>
+                                <th style="width: 80px">이수 구분</th>
+                                <th style="width: 50px">이수 학년</th>
+                                <th style="width: 50px">이수 학기</th>
+                                <th style="width: 50px">학생 성적</th>
+                                <th style="width: 50px">교과목 영역</th>
+                                <th style="width: 50px">교과목 학점</th>
+                                <th style="width: 20px">관리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subject_list">
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modal_subject_add" >추가</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+          </div>
+      </div>
+
+      <div class="modal fade" id="modal_subject_add" role="dialog" style="display: none">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="header"><b>새로운 과목을 추가합니다.</b></h4>
+            </div>
+            <div class="modal-body">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-3">
+                      <div class="form-group">
+                          <label>이수 학년</label>
+                          <select class="form-control" id="year">
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                              <option value="4">4</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="col-md-3">
+                      <div class="form-group">
+                          <label>이수 학기</label>
+                          <select class="form-control" id="semester">
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                              <option value="3">여름학기(계절)</option>
+                              <option value="4">겨울학기(계절)</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <label>이수 구분</label>
+                          <select class="form-control" id="subject_division">
+                              <option>1</option>
+                              <option>1</option>
+                              <option>1</option>
+                          </select>
+                      </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                      <div class="form-group">
+                          <label>과목 이름</label>
+                          <select class="form-control select2" id="subject_name" style="width:100%;">
+                              {% for subject in subjects %}
+                                  <option value="{{ subject.subject_code }}">{{ subject.subject_name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <label>나의 성적</label>
+                          <select id="grades" class="form-control">
+                              <option>1</option>
+                              <option>1</option>
+                              <option>1</option>
+                          </select>
+                      </div>
+                  </div>
+                </div>
+              </div>
+                <i class="fa fa-warning"></i> 이수 구분을 잘 선택해주시기 바랍니다.
+            </div>
+            <div class="modal-footer">
+              <div class="row">
+                <div class="col-md-12">
+                  <button class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
+                  <button class="btn btn-primary pull-right" id="subject_submit">추가하기</button>
+                </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="modal_subject_update" role="dialog" style="display: none">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="header"><b>과목 내용을 수정합니다.</b></h4>
+            </div>
+            <div class="modal-body">
+            <div id="update_subject_id" style="visibility:hidden"></div>
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-3">
+                      <div class="form-group">
+                          <label>이수 학년</label>
+                          <select class="form-control" id="update_year">
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                              <option value="4">4</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="col-md-3">
+                      <div class="form-group">
+                          <label>이수 학기</label>
+                          <select class="form-control" id="update_semester">
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                              <option value="3">여름학기(계절)</option>
+                              <option value="4">겨울학기(계절)</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <label>이수 구분</label>
+                          <select class="form-control" id="update_subject_division">
+                              <option>1</option>
+                              <option>1</option>
+                              <option>1</option>
+                          </select>
+                      </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                      <div class="form-group">
+                          <label>과목 이름</label>
+                          <select class="form-control select2" id="update_subject_name" style="width:100%;">
+                              {% for subject in subjects %}
+                                  <option value="{{ subject.subject_code }}">{{ subject.subject_name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <label>나의 성적</label>
+                          <select id="update_grades" class="form-control">
+                              <option>1</option>
+                              <option>1</option>
+                              <option>1</option>
+                          </select>
+                      </div>
+                  </div>
+                </div>
+              </div>
+                <i class="fa fa-warning"></i> 이수 구분을 잘 선택해주시기 바랍니다.
+            </div>
+            <div class="modal-footer">
+              <div class="row">
+                <div class="col-md-12">
+                  <button class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
+                  <button class="btn btn-primary pull-right" id="update_subject_submit">수정하기</button>
+                </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--------------------------
+        | Your Page Content Here |
+        -------------------------->
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+      
+
+{% include "include/footer.html" %}

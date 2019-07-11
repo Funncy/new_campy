@@ -1,0 +1,83 @@
+{% load static %}
+{% include "include/header.html" %}
+<form id='info-student'>
+
+    <input type = "hidden" name = 'user_id' value="{{ request.user.id }}"></input>
+
+    <div class="content-wrapper" >
+
+    <section class="content container-fluid">
+        <div class="col-md-6" style="float:none; margin:0 auto;">
+            <div class="row">
+                <div class="title">
+                    <h2><p>개인정보 변경</p>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                    <div class="form-group stop-dragging">
+                        <label>이메일</label>
+                        <input class="form-control" style="width:100%" name="user_email" type="email" placeholder="이메일을 입력해주세요." value="{{ user.email }}" disabled>
+                    </div>
+            </div>
+            <div class="row">
+                    <div class="form-group stop-dragging">
+                            <div class="form-group">
+                                <label>이름</label>
+                                <input class="form-control" style="width:100%"
+                                       name="user_name" placeholder="이름을 입력해주세요." value="{{ user.username }}" disabled>
+                            </div>
+                    </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label>대학교</label>
+                    <select class="form-control selectpicker" data-live-search="true" style="width:100%"  name="user_university_name">
+                        {% for university in universitys %}
+                            <option value="{{ university.meta_data_relation_name }}">{{ university.meta_data_relation_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label>주 전공</label>
+                        <input name="main_major_college" type="hidden">
+                        <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" style="width:100%" id="main_major"  name="main_major_department">
+                        </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label>복수 전공</label>
+                    <input name="double_major_college" type="hidden">
+                        <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true"  style="width:100%"  name="double_major_department">
+                        <option value="0" selected>없음</option>
+                        </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label>부 전공</label>
+                    <input name="minor_major_college" type="hidden">
+                        <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true"  style="width:100%"  name="minor_major_department">
+                        <option value="0" selected>없음</option>
+                        </select>
+                </div>
+            </div>
+            <div class="row">
+                    <div class="form-group">
+                        <label>입학년도</label>
+                            <select class="form-control selectpicker" data-size="10" data-live-search="true" style="width:100%" name="student_admission_year">
+                            </select>
+                    </div>
+            </div>
+            <div class="row"  style="text-align: center"><br>
+                <button class="btn btn-primary" style="width: 100%" onclick="supdateData();">수정 완료</button>
+            </div>
+        </div>
+    </section>
+  </div>
+</form>
+
+{% include "include/footer.html" %}
