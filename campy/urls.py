@@ -29,5 +29,6 @@ urlpatterns = [
 
     # app ui list
     path('student/', include('student.urls')),
+    path('history/', include('history.urls')),
 
 ]
