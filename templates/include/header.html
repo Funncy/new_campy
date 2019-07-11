@@ -213,11 +213,11 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header"> 대학 생활</li>
         <li class="{% if scheduleActive %}active{% endif %}"><a href="{% url 'index' %}"><i class="fa fa-calendar"></i> <span>수강설계</span></a></li>
-        <li class="{% if graduationActive %}active{% endif %}"><a href="{% url 'index' %}"><i class="fa fa-graduation-cap"></i> <span>졸업진단</span></a></li>
+        <li class="{% if graduationDiagnosisActive %}active{% endif %}"><a href="{% url 'index' %}"><i class="fa fa-graduation-cap"></i> <span>졸업진단</span></a></li>
         <li class="{% if communityActive %}active{% endif %}"><a href="{% url 'index' %}"><i class="fa  fa-comments-o"></i> <span>커뮤니티</span></a></li>
 
         <li class="header"> 내 정보</li>
-        <li class="{% if historyActive %}active{% endif %}"><a href="{% url 'index' %}"><i class="fa fa-file-text-o"></i> <span>수강 이력 관리</span></a></li>
+        <li class="{% if lectureHistoryActive %}active{% endif %}"><a href="{% url 'index' %}"><i class="fa fa-file-text-o"></i> <span>수강 이력 관리</span></a></li>
         <li class="{% if mypageActive %}active{% endif %}"><a href="{% url 'index' %}"><i class="fa fa-cog"></i> <span>내 정보 관리</span></a></li>
 
         {% if user.is_staff %}
