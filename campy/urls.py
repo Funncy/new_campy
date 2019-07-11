@@ -20,12 +20,12 @@ from . import views
 urlpatterns = [
     # admin list
     path('admin/', admin.site.urls),
-    path('login/', views.Index, name='login'),
+    path('login/', views.test, name='login'),
     path('accounts/', include('allauth.urls')),
-    path('logout/', views.Index, name='logout'),
+    path('logout/', views.test, name='logout'),
 
     # ui list
-    path('', views.Index, name='index'),
+    path('', views.IndexTV.as_view(), name='index'),
     path('test/', views.test, name='test'),
 
     # app ui list

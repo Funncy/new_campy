@@ -1,14 +1,9 @@
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import DetailView
-from student.models import StudentInfo
+from django.shortcuts import render
+from django.views.generic import TemplateView
+from student.mixin import StudentInfoMixin
 
-
-## 실 사용 list
-def Index(request):
-    context = {
-        'student': StudentInfo.get_student(request.user.id)
-    }
-    return render(request, 'index.html', context)
+class IndexTV(StudentInfoMixin, TemplateView):
+    template_name = 'index.html'
 
 def test(request):
     return render(request, 'test.html', {})
