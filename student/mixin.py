@@ -26,6 +26,9 @@ class ActiveMixin(object):
         context[self.active] = True
         return context
 
+class DefaultMixin(StudentInfoMixin, ActiveMixin):
+    pass
+
 '''
 로그인한 상태인지 확인하는 믹스인
 '''
