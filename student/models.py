@@ -15,6 +15,12 @@ class StudentInfo(models.Model):
     major = models.ForeignKey(Department, verbose_name='주전공', on_delete=models.CASCADE)
     admission_year = models.SmallIntegerField(verbose_name='입학년도')
 
+    def get_student(pk):
+        try:
+            return StudentInfo.objects.get(user_id=pk)
+        except StudentInfo.DoesNotExist:
+            return None
+
 class StudentAddedMajor(models.Model):
     user = models.ForeignKey(User, verbose_name='유저', on_delete=models.CASCADE)
     major_division = models.CharField(verbose_name='전공구분', max_length=10)

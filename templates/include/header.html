@@ -47,82 +47,6 @@
     <script src="{% static 'dist/fullcalendar/4.2.0/packages/timegrid/main.js' %}"></script>
     <script src="{% static 'dist/fullcalendar/4.2.0/packages/list/main.js' %}"></script>
 
-    <script>
-
-      document.addEventListener('DOMContentLoaded', function() {
-        var initialTimeZone = 'local';
-        var timeZoneSelectorEl = document.getElementById('time-zone-selector');
-        var loadingEl = document.getElementById('loading');
-        var calendarEl = document.getElementById('calendar');
-
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          plugins: [ 'interaction', 'timeGrid', 'list' ],
-          timeZone: initialTimeZone,
-          defaultDate: new Date(),
-          header: {
-            // left: 'prev,next today',
-            // center: 'title',
-            // right: 'timeGridWeek'
-            left: '',
-            center: '',
-            right: ''
-          },
-          navLinks: true, // can click day/week names to navigate views
-          editable: true,
-          selectable: true,
-          eventLimit: true, // allow "more" link when too many events
-          events: {
-            url: 'php/get-events.php',
-            failure: function() {
-              document.getElementById('script-warning').style.display = 'inline'; // show
-            }
-          },
-          loading: function(bool) {
-            if (bool) {
-              loadingEl.style.display = 'inline'; // show
-            } else {
-              loadingEl.style.display = 'none'; // hide
-            }
-          },
-
-          eventTimeFormat: { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' },
-
-          dateClick: function(arg) {
-            console.log('dateClick', calendar.formatIso(arg.date));
-          },
-          select: function(arg) {
-            console.log('select', calendar.formatIso(arg.start), calendar.formatIso(arg.end));
-          }
-        });
-
-        calendar.render();
-
-        // load the list of available timezones, build the <select> options
-        // it's HIGHLY recommended to use a different library for network requests, not this internal util func
-        // FullCalendar.requestJson('GET', 'php/get-time-zones.php', {}, function(timeZones) {
-
-        //   timeZones.forEach(function(timeZone) {
-        //     var optionEl;
-
-        //     if (timeZone !== 'UTC') { // UTC is already in the list
-        //       optionEl = document.createElement('option');
-        //       optionEl.value = timeZone;
-        //       optionEl.innerText = timeZone;
-        //       timeZoneSelectorEl.appendChild(optionEl);
-        //     }
-        //   });
-        // }, function() {
-        //   // TODO: handle error
-        // });
-
-        // when the timezone selector changes, dynamically change the calendar option
-        timeZoneSelectorEl.addEventListener('change', function() {
-          calendar.setOption('timeZone', this.value);
-        });
-      });
-
-    </script>
-
       <!-- 장고 csrf ajax 통신용 스크립트-->
       <script>
         function getCookie(name) {
@@ -210,7 +134,7 @@
 
                                     {% if student %}
                                              <p>{{ user.first_name }}{{ user.last_name }}
-                                                <small>{{ student.student_university_name }} / {{ student.student_major_name }}</small>
+                                                <small>{{ student.university.name }} / {{ student.major.name }}</small>
                                              </p>
                                     {% else %}
                                         {% if user.is_staff %}
@@ -266,7 +190,7 @@
                         {% endif %}
                         <!-- Status -->
                         {% if student %}
-                                <a href="{% url 'mypage' %}">{{ student.student_university_name }} / {{ student.student_major_name }}</a>
+                                <a href="{% url 'mypage' %}">{{ student.university.name }} / {{ student.major.name }}</a>
                         {% else %}
                             {% if user.is_staff %}
                                  <a href="{% url 'mypage' %}">관리자</a>
@@ -288,13 +212,13 @@
 
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header"> 대학 생활</li>
-        <li class="{% if courseActive %}active{% endif %}"><a href="{% url 'course' %}"><i class="fa fa-calendar"></i> <span>수강설계</span></a></li>
-        <li class="{% if graduationActive %}active{% endif %}"><a href="{% url 'graduation' %}"><i class="fa fa-graduation-cap"></i> <span>졸업진단</span></a></li>
-        <li class="{% if communityActive %}active{% endif %}"><a href="{% url 'community' %}"><i class="fa  fa-comments-o"></i> <span>커뮤니티</span></a></li>
+        <li class="{% if scheduleActive %}active{% endif %}"><a href="{% url 'index' %}"><i class="fa fa-calendar"></i> <span>수강설계</span></a></li>
+        <li class="{% if graduationActive %}active{% endif %}"><a href="{% url 'index' %}"><i class="fa fa-graduation-cap"></i> <span>졸업진단</span></a></li>
+        <li class="{% if communityActive %}active{% endif %}"><a href="{% url 'index' %}"><i class="fa  fa-comments-o"></i> <span>커뮤니티</span></a></li>
 
         <li class="header"> 내 정보</li>
-        <li class="{% if historyActive %}active{% endif %}"><a href="{% url 'history' %}"><i class="fa fa-file-text-o"></i> <span>수강 이력 관리</span></a></li>
-        <li class="{% if mypageActive %}active{% endif %}"><a href="{% url 'mypage' %}"><i class="fa fa-cog"></i> <span>내 정보 관리</span></a></li>
+        <li class="{% if historyActive %}active{% endif %}"><a href="{% url 'index' %}"><i class="fa fa-file-text-o"></i> <span>수강 이력 관리</span></a></li>
+        <li class="{% if mypageActive %}active{% endif %}"><a href="{% url 'index' %}"><i class="fa fa-cog"></i> <span>내 정보 관리</span></a></li>
 
         {% if user.is_staff %}
         <li class="header"> 관리 메뉴</li>
@@ -305,10 +229,10 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{% if subjectGroupActive %}active{% endif %}"><a href="{% url 'subject_group' %}">대학 관리</a></li>
-                        <li class="{% if ruleActive %}active{% endif %}"><a href="{% url 'rule' %}">대학 데이터 관리</a></li>
-                        <li class="{% if subjectActive %}active{% endif %}"><a href="{% url 'subject' %}">학과 관리</a></li>
-                        <li class="{% if generalActive %}active{% endif %}"><a href="{% url 'general' %}">커뮤니티 그룹 관리</a></li>
+                        <li class="{% if universityActive %}active{% endif %}"><a href="{% url 'index' %}">대학 관리</a></li>
+                        <li class="{% if universityDataActive %}active{% endif %}"><a href="{% url 'index' %}">대학 데이터 관리</a></li>
+                        <li class="{% if departmentActive %}active{% endif %}"><a href="{% url 'index' %}">학과 관리</a></li>
+                        <li class="{% if communityGroupActive %}active{% endif %}"><a href="{% url 'index' %}">커뮤니티 그룹 관리</a></li>
                     </ul>
         </li>
         <li class="treeview">
@@ -318,9 +242,9 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{% if subjectGroupActive %}active{% endif %}"><a href="{% url 'subject_group' %}">과목 관리</a></li>
-                        <li class="{% if ruleActive %}active{% endif %}"><a href="{% url 'rule' %}">강의 관리</a></li>
-                        <li class="{% if subjectActive %}active{% endif %}"><a href="{% url 'subject' %}">데이터 업로드</a></li>
+                        <li class="{% if subjectManagementActive %}active{% endif %}"><a href="{% url 'index' %}">과목 관리</a></li>
+                        <li class="{% if lectureManagementActive %}active{% endif %}"><a href="{% url 'index' %}">강의 관리</a></li>
+                        <li class="{% if dataUploadActive %}active{% endif %}"><a href="{% url 'index' %}">데이터 업로드</a></li>
                     </ul>
         </li>
         <li class="treeview">
@@ -330,8 +254,8 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{% if subjectGroupActive %}active{% endif %}"><a href="{% url 'subject_group' %}">과목 그룹 관리</a></li>
-                        <li class="{% if ruleActive %}active{% endif %}"><a href="{% url 'rule' %}">졸업 요건 관리</a></li>
+                        <li class="{% if subjectGroupActive %}active{% endif %}"><a href="{% url 'index' %}">과목 그룹 관리</a></li>
+                        <li class="{% if ruleActive %}active{% endif %}"><a href="{% url 'index' %}">졸업 요건 관리</a></li>
                     </ul>
         </li>
         {% endif %}
