@@ -7,3 +7,6 @@ class IndexTV(StudentInfoMixin, TemplateView):
 
 def test(request):
     return render(request, 'test.html', {})
+
+class LoginTV(TemplateView):
+    template_name = 'login.html'

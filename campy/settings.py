@@ -143,7 +143,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'staticfiles'),
 ]
 
-LOGIN_REDIRECT_URL = '/join/'
+LOGIN_REDIRECT_URL = '/student/join/'
 ACCOUNT_LOGOUT_ON_GET = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
 ACCOUNT_ADAPTER = "campy.adapter.MyLoginAccountAdapter"

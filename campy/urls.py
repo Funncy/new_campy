@@ -20,9 +20,8 @@ from . import views
 urlpatterns = [
     # admin list
     path('admin/', admin.site.urls),
-    path('login/', views.test, name='login'),
+    path('login/', views.LoginTV.as_view(), name='login'),
     path('accounts/', include('allauth.urls')),
-    path('logout/', views.test, name='logout'),
 
     # ui list
     path('', views.IndexTV.as_view(), name='index'),
