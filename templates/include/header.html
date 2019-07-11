@@ -299,7 +299,32 @@
         {% if user.is_staff %}
         <li class="header"> 관리 메뉴</li>
         <li class="treeview">
-                    <a href="#!"><i class="fa fa-university"></i> <span>시스템 관리</span>
+                    <a href="#!"><i class="fa fa-bars"></i> <span>일반 관리</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{% if subjectGroupActive %}active{% endif %}"><a href="{% url 'subject_group' %}">대학 관리</a></li>
+                        <li class="{% if ruleActive %}active{% endif %}"><a href="{% url 'rule' %}">대학 데이터 관리</a></li>
+                        <li class="{% if subjectActive %}active{% endif %}"><a href="{% url 'subject' %}">학과 관리</a></li>
+                        <li class="{% if generalActive %}active{% endif %}"><a href="{% url 'general' %}">커뮤니티 그룹 관리</a></li>
+                    </ul>
+        </li>
+        <li class="treeview">
+                    <a href="#!"><i class="fa fa-book"></i> <span>강의 관리</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{% if subjectGroupActive %}active{% endif %}"><a href="{% url 'subject_group' %}">과목 관리</a></li>
+                        <li class="{% if ruleActive %}active{% endif %}"><a href="{% url 'rule' %}">강의 관리</a></li>
+                        <li class="{% if subjectActive %}active{% endif %}"><a href="{% url 'subject' %}">데이터 업로드</a></li>
+                    </ul>
+        </li>
+        <li class="treeview">
+                    <a href="#!"><i class="fa fa-mortar-board"></i> <span>졸업진단 관리</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -307,8 +332,6 @@
                     <ul class="treeview-menu">
                         <li class="{% if subjectGroupActive %}active{% endif %}"><a href="{% url 'subject_group' %}">과목 그룹 관리</a></li>
                         <li class="{% if ruleActive %}active{% endif %}"><a href="{% url 'rule' %}">졸업 요건 관리</a></li>
-                        <li class="{% if subjectActive %}active{% endif %}"><a href="{% url 'subject' %}">과목 관리</a></li>
-                        <li class="{% if generalActive %}active{% endif %}"><a href="{% url 'general' %}">일반 설정 관리</a></li>
                     </ul>
         </li>
         {% endif %}
