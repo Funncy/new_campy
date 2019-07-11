@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic import ListView
 from university.models import University
 from student.models import StudentInfo
-from .mixin import ActiveMixin, StudentInfoMixin, LoginRequiredMixin
+from .mixin import DefaultMixin, LoginRequiredMixin
 
 # Create your views here.
 
-class JoinLV(ActiveMixin, LoginRequiredMixin, StudentInfoMixin, ListView):
+class JoinLV(DefaultMixin, LoginRequiredMixin, ListView):
     model = University
     template_name = 'join.html'
 
@@ -18,7 +18,7 @@ class JoinLV(ActiveMixin, LoginRequiredMixin, StudentInfoMixin, ListView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class MypageLV(ActiveMixin, LoginRequiredMixin, StudentInfoMixin, ListView):
+class MypageLV(DefaultMixin, LoginRequiredMixin, ListView):
     model = University
     template_name = 'mypage.html'
     active = 'mypageActive'

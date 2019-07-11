@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.views.generic import ListView
 from .models import LectureHistory
-from student.mixin import ActiveMixin, LoginRequiredMixin
+from student.mixin import DefaultMixin, LoginRequiredMixin
 
 # Create your views here.
 
-class LectureHistoryLV(ActiveMixin, LoginRequiredMixin, ListView):
+class LectureHistoryLV(DefaultMixin, LoginRequiredMixin, ListView):
     model = LectureHistory
     template_name = 'lecture_history.html'
     active = 'lectureHistoryActive'
