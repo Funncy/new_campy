@@ -21,12 +21,28 @@ class JoinCV(DefaultMixin, LoginRequiredMixin, UniversityMixin, CreateView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        #유저 연결
+
+        # 유저 연결
         user = self.request.user
         form.instance.user = user
 
-        multi_major = form.cleaned_data['multi_major'].id
-        sub_major = form.cleaned_data['sub_major'].id
+        #부/복수 전공 저장
+        multi_major = None
+        sub_major = None
+        if form.cleaned_data['multi_major'] is not None:
+            multi_major = form.cleaned_data['multi_major'].id
+        if form.cleaned_data['sub_major'] is not None:
+            sub_major = form.cleaned_data['sub_major'].id
+
+        #주전공 - 복수전공/부전공 중복
+        if form.instance.major_id == multi_major or form.instance.major_id == sub_major:
+            form.add_error("major", "학과를 중복 선택하였습니다.")
+            return self.form_invalid(form)
+
+        #부전공 - 복수전공 중복
+        if multi_major is not None and multi_major == sub_major:
+            form.add_error("major", "학과를 중복 선택하였습니다.")
+            return self.form_invalid(form)
 
         if multi_major is not None:
             StudentAddedMajor.save_added_major(multi_major, user.id, 'multi_major')
