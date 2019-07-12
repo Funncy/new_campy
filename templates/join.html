@@ -88,17 +88,6 @@
 
 <script>
 
-$(document).ready(function(){
-
-//초기 학번 설정
-var current_year = new Date().getFullYear() + 1;
-for(var year=1950; year <= current_year ; current_year--) {
-    $("select[name='admission_year']").append("<option value='"+current_year+"'>"+current_year+" 학번"+"</option>")
-}
-
-
-
-});
 
     //대학 수정시 학과 변동
     $("select[name='university']").change(function() {

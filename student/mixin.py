@@ -26,7 +26,21 @@ class ActiveMixin(object):
         context[self.active] = True
         return context
 
-class DefaultMixin(StudentInfoMixin, ActiveMixin):
+'''
+최초 회원가입을 한 상태인지 확인 믹스인
+'''
+class JoinMixin(object):
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            if StudentInfo.objects.get(user_id=request.user.id) is None:
+                return super().dispatch(request, *args, **kwargs)
+        except StudentInfo.DoesNotExist:
+            return redirect(reverse('join'))
+        return super().dispatch(request, *args, **kwargs)
+
+class DefaultMixin(StudentInfoMixin, ActiveMixin, JoinMixin):
     pass
 
 '''

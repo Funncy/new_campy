@@ -3,6 +3,8 @@ from .models import StudentInfo
 from university.models import University, Department
 from django.forms import ModelChoiceField
 
+YEAR_CHOICES = [tuple([x,x]) for x in reversed(range(1950,2021))]
+
 class StudentForm(forms.ModelForm):
     university = forms.ModelChoiceField(queryset=University.objects.all(), initial=1,
                                         widget=forms.Select(attrs={
@@ -33,7 +35,7 @@ class StudentForm(forms.ModelForm):
     admission_year = forms.IntegerField(widget=forms.Select(attrs={
                                            'class': 'form-control select2',
                                            'style': 'width:100%;',
-                                           'id': 'form_admission_year'}, ))
+                                           'id': 'form_admission_year'},choices=YEAR_CHOICES ))
 
     class Meta:
         model = StudentInfo
@@ -41,6 +43,7 @@ class StudentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         self.fields['university'].choices = [(u.id, u.name) for u in University.objects.all()]
         self.fields['major'].choices = [(u.id, u.college_name + ' : ' + u.name) for u in
                                         Department.objects.filter(university=1)]

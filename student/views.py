@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect, reverse
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 from university.models import University
 from student.models import StudentInfo, StudentAddedMajor
-from .mixin import DefaultMixin, LoginRequiredMixin
+from .mixin import DefaultMixin, LoginRequiredMixin, ActiveMixin, StudentInfoMixin
 from university.mixin import UniversityMixin
 from .forms import StudentForm
 # Create your views here.
 
-class JoinCV(DefaultMixin, LoginRequiredMixin, UniversityMixin, CreateView):
+class JoinCV(StudentInfoMixin, ActiveMixin, LoginRequiredMixin, UniversityMixin, CreateView):
     model = StudentInfo
     template_name = 'join.html'
     success_url = '/'
@@ -53,7 +53,13 @@ class JoinCV(DefaultMixin, LoginRequiredMixin, UniversityMixin, CreateView):
         return super().form_valid(form)
 
 
-class MypageLV(DefaultMixin, LoginRequiredMixin, ListView):
-    model = University
+class MypageUV(DefaultMixin, LoginRequiredMixin, UpdateView):
+    model = StudentInfo
     template_name = 'mypage.html'
+    form_class = StudentForm
     active = 'mypageActive'
+    success_url = '/student/mypage/'
+
+    def get_object(self):
+        return StudentInfo.objects.get(user_id=self.request.user.id)
+

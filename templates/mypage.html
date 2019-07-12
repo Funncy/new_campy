@@ -15,6 +15,22 @@
             </div>
             <br>
             <div class="row">
+                {% if form.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                        <div class="alert alert-info alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        {{ error|escape }}
+                        </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-info alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        {{ error|escape }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
                     <div class="form-group stop-dragging">
                         <label>이메일</label>
                         <input class="form-control" style="width:100%" name="user_email" type="email" placeholder="이메일을 입력해주세요." value="{{ user.email }}" disabled>
@@ -32,44 +48,31 @@
             <div class="row">
                 <div class="form-group">
                     <label>대학교</label>
-                    <select class="form-control selectpicker" data-live-search="true" style="width:100%"  name="user_university_name">
-                        {% for university in universitys %}
-                            <option value="{{ university.meta_data_relation_name }}">{{ university.meta_data_relation_name }}</option>
-                        {% endfor %}
-                    </select>
+                    {{ form.university }}
                 </div>
             </div>
             <div class="row">
                 <div class="form-group">
                     <label>주 전공</label>
-                        <input name="main_major_college" type="hidden">
-                        <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" style="width:100%" id="main_major"  name="main_major_department">
-                        </select>
+                        {{ form.major }}
                 </div>
             </div>
             <div class="row">
                 <div class="form-group">
                     <label>복수 전공</label>
-                    <input name="double_major_college" type="hidden">
-                        <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true"  style="width:100%"  name="double_major_department">
-                        <option value="0" selected>없음</option>
-                        </select>
+                    {{ form.multi_major }}
                 </div>
             </div>
             <div class="row">
                 <div class="form-group">
                     <label>부 전공</label>
-                    <input name="minor_major_college" type="hidden">
-                        <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true"  style="width:100%"  name="minor_major_department">
-                        <option value="0" selected>없음</option>
-                        </select>
+                    {{ form.sub_major }}
                 </div>
             </div>
             <div class="row">
                     <div class="form-group">
                         <label>입학년도</label>
-                            <select class="form-control selectpicker" data-size="10" data-live-search="true" style="width:100%" name="student_admission_year">
-                            </select>
+                        {{ form.admission_year }}
                     </div>
             </div>
             <div class="row"  style="text-align: center"><br>
