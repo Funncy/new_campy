@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from student.mixin import DefaultMixin, StaffRequiredMixin
 from .models import University, CompletionDivision, Area, Track, \
     Department, Community
+from .serializers import DepartmentSerializer
 
 # Create your views here.
 
@@ -93,3 +95,18 @@ class CommunityLV(DefaultMixin, StaffRequiredMixin, ListView):
     model = Community
     template_name = 'community_list.html'
     active = 'communityGroupActive'
+
+
+'''
+
+api 
+
+'''
+
+class APIDepartmentModelViewset(ReadOnlyModelViewSet):
+    queryset = Department.objects.all()
+    serializer_class = DepartmentSerializer
+
+    def get_queryset(self):
+        university = self.request.query_params.get('university')
+        return Department.objects.filter(university=university)

@@ -1,5 +1,10 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
 from . import views
+
+router = DefaultRouter()
+router.register(r'department', views.APIDepartmentModelViewset)
 
 urlpatterns = [
     #대학 CRU
@@ -29,4 +34,7 @@ urlpatterns = [
     #커뮤니티 그룹
     path('community/', views.CommunityLV.as_view(),
          name='community_list'),
+
+    #API
+    path('api/', include(router.urls)),
 ]
