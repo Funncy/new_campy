@@ -70,4 +70,53 @@
   </div>
   <!-- /.content-wrapper -->
 
+<script>
+
+$(document).ready(function(){
+
+//초기 학번 설정
+var current_year = new Date().getFullYear() + 1;
+for(var year=1950; year <= current_year ; current_year--) {
+    $("select[name='admission_year']").append("<option value='"+current_year+"'>"+current_year+" 학번"+"</option>")
+}
+
+
+
+});
+
+    //대학 수정시 학과 변동
+    $("select[name='university']").change(function() {
+        $.ajax({
+            url: '/university/api/department/',
+            type: 'get',
+            data: {
+                'university' : $("select[name='university']").val()
+            },
+            success: function (result) {
+
+                //셀렉트 박스 초기화
+                $("select[name='major']").empty()
+                $("select[name='multi_major']").empty()
+                $("select[name='sub_major']").empty()
+
+                $("select[name='multi_major']").append("<option value selected>없음</option>")
+                $("select[name='sub_major']").append("<option value selected>없음</option>")
+
+                //대학에 맞는 초기 학과 정보 로드
+                for(var key in result){
+                    $("select[name='major']").append("<option value='"+result[key].id+"'>"+result[key].college_name+" : "+naresult[key].name+"</option>");
+                    $("select[name='multi_major']").append("<option value='"+result[key].id+"'>"+result[key].college_name+" : "+naresult[key].name+"</option>");
+                    $("select[name='sub_major']").append("<option value='"+result[key].id+"'>"+result[key].college_name+" : "+naresult[key].name+"</option>");
+                }
+
+                
+
+            },
+            error:function(request,status,error){
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        })
+})
+</script>
+
 {% include "include/footer.html" %}

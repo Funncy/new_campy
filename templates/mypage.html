@@ -80,4 +80,27 @@
   </div>
 </form>
 
+
+
+<script>
+    //대학 수정시 학과 변동
+    $('#college_name').change(function() {
+    $.ajax({
+        url: ,
+        type: ,
+        data: {
+        },
+        success: function (result) {
+            //대학에 맞는 초기 학과 정보 로드
+            for(var key in result){
+                $("#major_subject").append("<option value='"+result[key].meta_data_relation_code+"'>"+result[key].meta_data_relation_name+"</option>");
+            }
+        },
+        error: function () {
+            alert('error2')
+        }
+    })
+})
+</script>
+
 {% include "include/footer.html" %}
