@@ -17,49 +17,36 @@
                 </div>
             </div>
             <br>
+            <form action="." method="post">{% csrf_token %}
+            </form>
             <div class="row">
                     <div class="form-group">
                             <label>대학교</label>
-                            <select class="form-control select2" style="width:100%"  id="college_name" onchange="categoryChange(this)">
-                                    <option>대학을 선택해주세요.</option>
-                                    <option value="u1">서울대학교</option>
-                                    <option value="u2">세종대학교</option>
-                                    <option value="u3">고려대학교</option>
-                                    <option value="u4">연세대학교</option>
-                                    <option value="u5">안산대학교</option>
-                            </select>
+                            {{ form.university }}
                         </div>
             </div>
             <div class="row">
                     <div class="form-group">
                         <label>주 전공</label>
-                        <select class="form-control select2" style="width:100%"  id="major_subject">
-                            <option>주 전공을 선택해주세요.</option>
-                        </select>
+                        {{ form.major }}
                     </div>
             </div>
             <div class="row">
                 <div class="form-group">
                     <label>복수 전공</label>
-                    <select class="form-control select2" style="width:100%"  id="major_subject">
-                        <option>복수 전공을 선택해주세요.</option>
-                    </select>
+                    {{ form.multi_major }}
                 </div>
             </div>
             <div class="row">
                 <div class="form-group">
                     <label>부 전공</label>
-                    <select class="form-control select2" style="width:100%"  id="major_subject">
-                        <option>부 전공을 선택해주세요.</option>
-                    </select>
+                    {{ form.sub_major }}
                 </div>
             </div>
             <div class="row">
                     <div class="form-group">
                         <label>입학년도</label>
-                        <select class="form-control select2" style="width:100%" id="admission_year">
-                            <option>입학년도를 설정해주세요</option>
-                        </select>
+                        {{ form.admission_year }}
                     </div>
             </div>
             <div class="row">

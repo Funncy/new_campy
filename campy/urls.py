@@ -28,11 +28,11 @@ urlpatterns = [
     path('test/', views.test, name='test'),
 
     # app ui list
-    path('student/', include('student.urls')),
-    path('history/', include('history.urls')),
-    path('graduation/', include('graduation.urls')),
-    path('schedule/', include('schedule.urls')),
-    path('university/', include('university.urls')),
-    path('lecture/', include('lecture.urls')),
+    path('student/', include('student.urls'), name='student'),
+    path('history/', include('history.urls'), name='history'),
+    path('graduation/', include('graduation.urls'), name='graduation'),
+    path('schedule/', include('schedule.urls'), name='schedule'),
+    path('university/', include('university.urls'), name='university'),
+    path('lecture/', include('lecture.urls'), name='lecture'),
 
 ]
