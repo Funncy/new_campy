@@ -18,7 +18,6 @@
             </div>
             <br>
             <form action="." method="post">{% csrf_token %}
-            </form>
             <div class="row">
                     <div class="form-group">
                             <label>대학교</label>
@@ -58,8 +57,9 @@
               </div>
             </div>
             <div class="row" style="text-align: center"><br>
-                <button class="btn btn-primary" style="width: 100%">회원가입 완료</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%">회원가입 완료</button>
             </div>
+            </form>
         </div>
       <!--------------------------
         | Your Page Content Here |
@@ -104,12 +104,14 @@ for(var year=1950; year <= current_year ; current_year--) {
 
                 //대학에 맞는 초기 학과 정보 로드
                 for(var key in result){
-                    $("select[name='major']").append("<option value='"+result[key].id+"'>"+result[key].college_name+" : "+naresult[key].name+"</option>");
-                    $("select[name='multi_major']").append("<option value='"+result[key].id+"'>"+result[key].college_name+" : "+naresult[key].name+"</option>");
-                    $("select[name='sub_major']").append("<option value='"+result[key].id+"'>"+result[key].college_name+" : "+naresult[key].name+"</option>");
+                    $("select[name='major']").append("<option value='"+result[key].id+"'>"+result[key].college_name+" : "+result[key].name+"</option>");
+                    $("select[name='multi_major']").append("<option value='"+result[key].id+"'>"+result[key].college_name+" : "+result[key].name+"</option>");
+                    $("select[name='sub_major']").append("<option value='"+result[key].id+"'>"+result[key].college_name+" : "+result[key].name+"</option>");
                 }
 
-                
+                $("select[name='major']").select2()
+                $("select[name='multi_major']").select2()
+                $("select[name='sub_major']").select2()
 
             },
             error:function(request,status,error){

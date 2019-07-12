@@ -20,14 +20,14 @@ class StudentForm(forms.ModelForm):
                                    widget=forms.Select(attrs={
                                        'class': 'form-control select2',
                                        'style': 'width:100%;',
-                                       'id': 'form_sub_major'}, )
+                                       'id': 'form_sub_major'},), required=False
                                    )
 
     multi_major = forms.ModelChoiceField(queryset=Department.objects.filter(university=1), initial=None,
                                        widget=forms.Select(attrs={
                                            'class': 'form-control select2',
                                            'style': 'width:100%;',
-                                           'id': 'form_multi_major'}, )
+                                           'id': 'form_multi_major'},), required=False
                                        )
 
     admission_year = forms.IntegerField(widget=forms.Select(attrs={

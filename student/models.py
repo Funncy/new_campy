@@ -23,5 +23,13 @@ class StudentInfo(models.Model):
 
 class StudentAddedMajor(models.Model):
     user = models.ForeignKey(User, verbose_name='유저', on_delete=models.CASCADE)
-    major_division = models.CharField(verbose_name='전공구분', max_length=10)
+    major_division = models.CharField(verbose_name='전공구분', max_length=20)
     major = models.ForeignKey(Department, verbose_name='전공학과', on_delete=models.CASCADE)
+
+    def save_added_major(major, user_id, major_division=''):
+        major = StudentAddedMajor(
+            user_id=user_id,
+            major_id=major,
+            major_division=major_division
+        )
+        major.save()
