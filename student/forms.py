@@ -33,7 +33,7 @@ class StudentForm(forms.ModelForm):
     admission_year = forms.IntegerField(widget=forms.Select(attrs={
                                            'class': 'form-control select2',
                                            'style': 'width:100%;',
-                                           'id': 'form_multi_major'}, ))
+                                           'id': 'form_admission_year'}, ))
 
     class Meta:
         model = StudentInfo
