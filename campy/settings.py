@@ -101,6 +101,8 @@ DATABASES = {
     }
 }
 
+# Django Message
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

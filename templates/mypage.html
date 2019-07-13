@@ -1,8 +1,5 @@
 {% load static %}
 {% include "include/header.html" %}
-<form id='info-student'>
-
-    <input type = "hidden" name = 'user_id' value="{{ request.user.id }}"></input>
 
     <div class="content-wrapper" >
 
@@ -10,11 +7,18 @@
         <div class="col-md-6" style="float:none; margin:0 auto;">
             <div class="row">
                 <div class="title">
-                    <h2><p>개인정보 변경</p>
+                    <h2><p>개인정보 변경</p></h2>
                 </div>
             </div>
             <br>
             <div class="row">
+                {% if messages %}
+                    <div class="alert alert-info">
+                        {% for m in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ m }}</li>
+                        {% endfor %}
+                    </div>
+                {% endif %}
                 {% if form.errors %}
                     {% for field in form %}
                         {% for error in field.errors %}
@@ -45,6 +49,7 @@
                             </div>
                     </div>
             </div>
+            <form method="post" action="{% url 'mypage' student.id %}">{% csrf_token %}
             <div class="row">
                 <div class="form-group">
                     <label>대학교</label>
@@ -75,35 +80,53 @@
                         {{ form.admission_year }}
                     </div>
             </div>
-            <div class="row"  style="text-align: center"><br>
-                <button class="btn btn-primary" style="width: 100%" onclick="supdateData();">수정 완료</button>
+            <div class="row" style="text-align: center"><br>
+                <button type="submit" class="btn btn-primary" style="width: 100%">수정하기</button>
             </div>
+            </form>
         </div>
+
     </section>
   </div>
-</form>
 
 
 
 <script>
     //대학 수정시 학과 변동
-    $('#college_name').change(function() {
-    $.ajax({
-        url: ,
-        type: ,
-        data: {
-        },
-        success: function (result) {
-            //대학에 맞는 초기 학과 정보 로드
-            for(var key in result){
-                $("#major_subject").append("<option value='"+result[key].meta_data_relation_code+"'>"+result[key].meta_data_relation_name+"</option>");
+    $("select[name='university']").change(function() {
+        $.ajax({
+            url: '/university/api/department/',
+            type: 'get',
+            data: {
+                'university' : $("select[name='university']").val()
+            },
+            success: function (result) {
+
+                //셀렉트 박스 초기화
+                $("select[name='major']").empty()
+                $("select[name='multi_major']").empty()
+                $("select[name='sub_major']").empty()
+
+                $("select[name='multi_major']").append("<option value selected>없음</option>")
+                $("select[name='sub_major']").append("<option value selected>없음</option>")
+
+                //대학에 맞는 초기 학과 정보 로드
+                for(var key in result){
+                    $("select[name='major']").append("<option value='"+result[key].id+"'>"+result[key].college_name+" : "+result[key].name+"</option>");
+                    $("select[name='multi_major']").append("<option value='"+result[key].id+"'>"+result[key].college_name+" : "+result[key].name+"</option>");
+                    $("select[name='sub_major']").append("<option value='"+result[key].id+"'>"+result[key].college_name+" : "+result[key].name+"</option>");
+                }
+
+                $("select[name='major']").select2()
+                $("select[name='multi_major']").select2()
+                $("select[name='sub_major']").select2()
+
+            },
+            error:function(request,status,error){
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
-        },
-        error: function () {
-            alert('error2')
-        }
-    })
-})
+            })
+        })
 </script>
 
 {% include "include/footer.html" %}
