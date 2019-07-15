@@ -1,4 +1,5 @@
 from django.db import models
+from student.models import StudentInfo
 from university.models import Area, CompletionDivision, University, Department
 # Create your models here.
 
@@ -9,6 +10,10 @@ class Subject(models.Model):
     completion_division = models.ForeignKey(CompletionDivision, verbose_name='이수구분', on_delete=models.CASCADE)
     area = models.ForeignKey(Area, verbose_name='영역', on_delete=models.CASCADE)
     credit = models.FloatField(default=0)
+
+    def get_university_subject_list(user_id):
+        student_info = StudentInfo.objects.get(user_id=user_id)
+        return Subject.objects.filter(university=student_info.university)
 
 class Lecture(models.Model):
     code = models.CharField(verbose_name='강의코드', max_length=20)

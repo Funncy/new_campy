@@ -12,3 +12,4 @@ class LectureHistory(models.Model):
     completion_year = models.SmallIntegerField(verbose_name='이수학년')
     completion_semester = models.SmallIntegerField(verbose_name='이수학기')
     completion_division = models.ForeignKey(CompletionDivision, verbose_name='이수구분', on_delete=models.CASCADE)
+
