@@ -22,6 +22,7 @@
         </div>
           <div class="box-body">
             <div class="row">
+              <div style="visibility: hidden" id="university_id">{{ student.university.id }}</div>
                 <div class="col-md-12">
                     <table class="table table-bordered table-striped table-hover text-center" >
                         <thead>
@@ -84,6 +85,10 @@
                       <div class="form-group">
                           <label>이수 학년</label>
                           <select class="form-control" id="add_year">
+                            <option value="1">1학년</option>
+                            <option value="2">2학년</option>
+                            <option value="3">3학년</option>
+                            <option value="4">4학년</option>
                           </select>
                       </div>
                   </div>
@@ -91,6 +96,10 @@
                       <div class="form-group">
                           <label>이수 학기</label>
                           <select class="form-control" id="add_semester">
+                              <option value="1">1학기</option>
+                              <option value="2">2학기</option>
+                              <option value="3">여름학기(계절)</option>
+                              <option value="4">겨울학기(계절)</option>
                           </select>
                       </div>
                   </div>
@@ -260,6 +269,21 @@
     $(document).ready(function(){
       //
       reload()
+
+      // 대학 학점 로드
+      $.ajax({
+            url: '/university/api/university/'+$('#university_id').text()+'/',
+            type: 'get',
+            data: {},
+            success: function (result) {
+                set_grades($("#add_grades"), result.maximum_credit)
+                set_grades($("#update_grades"), result.maximum_credit)
+            },
+            error:function(request,status,error){
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        })
+
     })
 
     function reload(){
@@ -335,7 +359,7 @@
     //삭제모달 클릭시 ajax호출
     $('#modal_subject_delete').click(function() {
         $.ajax({
-            url: '/lecture/api/history/'+$("#delete_subject_id").text()+'/',
+            url: '/history/api/history/'+$("#delete_subject_id").text()+'/',
             type: 'delete',
             data: {},
             success: function (result) {
@@ -352,7 +376,7 @@
     //수정모달 클릭시 ajax호출
     $('#subject_update').click(function() {
         $.ajax({
-            url: '/lecture/api/history/'+$("#update_subject_id").text()+'/',
+            url: '/history/api/history/'+$("#update_subject_id").text()+'/',
             type: 'patch',
             data: {
               'subject' : $("#update_subject_name").val(),
@@ -362,7 +386,7 @@
               'completion_division' : $("#update_subject_division").val(),
             },
             success: function (result) {
-
+              reload()
             },
             error:function(request,status,error){
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -399,6 +423,47 @@
             }
           })
     })
+
+    function set_grades(select_box, grade){
+        select_box.empty()
+
+        // 4.5 만점 (A+, A0, B+ ~)
+
+        if(grade == '4.5') {
+            select_box.append("<option value='A+'>A+</option>")
+            select_box.append("<option value='A0'>A0</option>")
+            select_box.append("<option value='B+'>A+</option>")
+            select_box.append("<option value='B0'>B0</option>")
+            select_box.append("<option value='C+'>C+</option>")
+            select_box.append("<option value='C0'>C0</option>")
+            select_box.append("<option value='D+'>D+</option>")
+            select_box.append("<option value='D0'>D0</option>")
+        }else if(grade == '4.3') {
+            // 4.3 만점 (A+, A0, A0, B+ ~)
+            select_box.append("<option value='A+'>A+</option>")
+            select_box.append("<option value='A0'>A0</option>")
+            select_box.append("<option value='A-'>A-</option>")
+            select_box.append("<option value='B+'>A+</option>")
+            select_box.append("<option value='B0'>B0</option>")
+            select_box.append("<option value='B-'>B-</option>")
+            select_box.append("<option value='C+'>C+</option>")
+            select_box.append("<option value='C0'>C0</option>")
+            select_box.append("<option value='C-'>C-</option>")
+            select_box.append("<option value='D+'>D+</option>")
+            select_box.append("<option value='D0'>D0</option>")
+            select_box.append("<option value='D-'>D-</option>")
+        }else if(grade == '4.0') {
+            // 4.0 만점 (A+, B, C ~)
+            select_box.append("<option value='A+'>A+</option>")
+            select_box.append("<option value='B'>A</option>")
+            select_box.append("<option value='C'>C</option>")
+            select_box.append("<option value='D'>D</option>")
+        }
+
+        select_box.append("<option value='P'>P</option>")
+        select_box.append("<option value='NP'>NP</option>")
+    }
+
 </script>
       
 
