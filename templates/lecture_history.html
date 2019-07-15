@@ -98,6 +98,9 @@
                       <div class="form-group">
                           <label>이수 구분</label>
                           <select class="form-control" id="add_subject_division">
+                              {% for division in divisions %}
+                                  <option value="{{ division.id }}">{{ division.name }}</option>
+                              {% endfor %}
                           </select>
                       </div>
                   </div>
@@ -171,9 +174,9 @@
                       <div class="form-group">
                           <label>이수 구분</label>
                           <select class="form-control" id="update_subject_division">
-                              <option>1</option>
-                              <option>1</option>
-                              <option>1</option>
+                              {% for division in divisions %}
+                                  <option value="{{ division.id }}">{{ division.name }}</option>
+                              {% endfor %}
                           </select>
                       </div>
                   </div>
@@ -261,7 +264,7 @@
 
     function reload(){
       $.ajax({
-            url: '/history/api/history',
+            url: '/history/api/history/',
             type: 'get',
             data: {},
             success: function (result) {
@@ -271,16 +274,16 @@
               $('#subject_list').empty()
 
               for(var key in result){
-                $('#subject_list').append("<tr><td>"+result[key].subject[0].name
-                +"</td><td>"+result[key].completion_division[0].name+"</td><td>"
+                $('#subject_list').append("<tr><td>"+result[key].subject.name
+                +"</td><td>"+result[key].completion_division.name+"</td><td>"
                 +result[key].completion_year+"</td><td>"+result[key].completion_semester
-                +"</td><td>"+result[key].grade+"</td><td>"+result[key].subject[0].area[0].name
-                +"</td><td>"+result[key].subject[0].credit
-                +"</td><td><button class='btn btn-warning btn-xs' data-toggle='modal' onclick=update_modal("+
-                result[key].id+", "+result[key].completion_year+","+result[key].completion_semester+","+result[key].completion_division[0].name+","+result[key].subject[0].name+","+result[key].grade+")"
-                +") data-target='#modal_subject_update' id='subject_update'>수정</button>"
-                +"<button class='btn btn-danger btn-xs' data-toggle='modal' onclick=delete_modal("+
-                result[key].id+","+result[key].subject[0].name+") data-target='#modal_subject_delete' id='subject_delete'>삭제</button></td>'</tr>")
+                +"</td><td>"+result[key].grade+"</td><td>"+result[key].subject.area.name
+                +"</td><td>"+result[key].subject.credit
+                +"</td><td><button class='btn btn-warning btn-xs' data-toggle='modal' onclick=update_modal('"+
+                +result[key].id+"','"+result[key].completion_year+"','"+result[key].completion_semester+"','"+result[key].completion_division.name+"','"+result[key].subject.name+"','"+result[key].grade+"')"
+                +" data-target='#modal_subject_update' id='subject_update'>수정</button>"
+                +"<button class='btn btn-danger btn-xs' data-toggle='modal' onclick=delete_modal('"+
+                result[key].id+"','"+result[key].subject.name+"') data-target='#modal_subject_delete' id='subject_delete'>삭제</button></td>'</tr>")
               }
 
               //추가 버튼 있는 한줄 
@@ -293,6 +296,7 @@
     }
 
     function update_modal(id, year, semester,subject_division, subject_name, grades){
+        alert(subject_name)
       $('#update_subject_id').val(id)
       $('#update_year').val(year)
       $('#update_semester').val(semester)
@@ -302,8 +306,8 @@
     }
 
     function delete_modal(id,subject_name){
-      $('#update_subject_id').val(id)
-      $('#update_subject_name').val(subject_name)
+      $('#delete_subject_id').text(id)
+      $('#delete_subject_name').text(subject_name)
 
     }
 
@@ -331,7 +335,7 @@
     //삭제모달 클릭시 ajax호출
     $('#modal_subject_delete').click(function() {
         $.ajax({
-            url: '/lecture/api/history/'+$("#delete_subject_id").val()+'/',
+            url: '/lecture/api/history/'+$("#delete_subject_id").text()+'/',
             type: 'delete',
             data: {},
             success: function (result) {
@@ -348,7 +352,7 @@
     //수정모달 클릭시 ajax호출
     $('#subject_update').click(function() {
         $.ajax({
-            url: '/lecture/api/history/'+$("#update_subject_id").val()+'/',
+            url: '/lecture/api/history/'+$("#update_subject_id").text()+'/',
             type: 'patch',
             data: {
               'subject' : $("#update_subject_name").val(),
@@ -369,11 +373,11 @@
     //추가모달 과목이름 변경시 이수구분 변경
     $('#add_subject_name').change(function(){
       $.ajax({
-            url: '/lecture/api/subject/detail/'+$("#add_subject_name").val()+'/',
+            url: '/lecture/api/subject/'+$("#add_subject_name").val()+'/',
             type: 'get',
             data: {},
             success: function (result) {
-              $('#add_subject_division').val(result[0].completion_division[0].name)
+              $('#add_subject_division').val(result.completion_division.id)
             },
             error:function(request,status,error){
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -384,11 +388,11 @@
     //수정모달 과목이름 변경시
     $('#update_subject_name').change(function(){
       $.ajax({
-            url: '/lecture/api/subject/detail/'+$("#update_subject_name").val()+'/',
+            url: '/lecture/api/subject/'+$("#update_subject_name").val()+'/',
             type: 'get',
             data: {},
             success: function (result) {
-              $('#update_subject_division').val(result[0].completion_division[0].name)
+              $('#update_subject_division').val(result.completion_division.id)
             },
             error:function(request,status,error){
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
