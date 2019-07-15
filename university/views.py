@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
+from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticated
@@ -8,7 +9,7 @@ from student.mixin import DefaultMixin, StaffRequiredMixin
 from .models import University, CompletionDivision, Area, Track, \
     Department, Community
 from .serializers import DepartmentSerializer, UniversitySerializer
-from .forms import UniversityForm
+from .forms import UniversityForm, DepartmentForm
 
 # Create your views here.
 
@@ -62,12 +63,6 @@ class UniversityDataDV(DefaultMixin, StaffRequiredMixin, DetailView):
     template_name = 'university_data_detail.html'
     active = 'universityDataActive'
 
-
-    #정보 넘기기
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
 '''
 학과 데이터 CRU UI
 '''
@@ -89,16 +84,59 @@ class DepartmentCV(DefaultMixin, StaffRequiredMixin, CreateView):
     model = Department
     template_name = 'department_form.html'
     active = 'departmentActive'
-    fields = ('university', 'name', 'college_name', 'same_department', 'community')
-    success_url = ''
+    form_class = DepartmentForm
+
+    # Form에 대학 정보 넣어주기 위함
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs['university'] = StudentInfo.objects.get(user_id=self.request.user.id).university_id
+        return kwargs
+
+    # 저장할때 대학 정보 추가
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        # things
+        self.object.university_id = self.kwargs['university']
+        self.object.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('department_list', args=(self.object.university_id, ))
 
 class DepartmentUV(DefaultMixin, StaffRequiredMixin, UpdateView):
     model = Department
     template_name = 'department_form.html'
     active = 'departmentActive'
-    fields = ('university', 'name', 'college_name', 'same_department', 'community')
-    success_url = ''
+    form_class = DepartmentForm
 
+    # Form에 대학 정보 넣어주기 위함
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs['university'] = StudentInfo.objects.get(user_id=self.request.user.id).university_id
+        return kwargs
+
+    # 저장할때 대학 정보 추가
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        # things
+        self.object.university_id = self.kwargs['university']
+        self.object.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('department_list', args=(self.object.university_id,))
+
+class DepartmentDeleteV(DefaultMixin, StaffRequiredMixin, DeleteView):
+    model = Department
+
+    # get 막기 ( API처럼 사용 )
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('department_list', args=(self.object.university_id,))
 
 '''
 커뮤니티 그룹

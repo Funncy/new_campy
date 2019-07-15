@@ -18,7 +18,7 @@
         <div class="box box-primary">
           <div class="box-header">
             <h4>
-                학과관리 - 세종대학교
+                학과관리 - {{ student.university.name }}
             </h4>
           </div>
           <div class="box-body">
@@ -29,23 +29,28 @@
                             <th class="col-md-1">번호</th>
                             <th class="col-md-3">단과대명</th>
                             <th class="col-md-3">학과명</th>
-                            <th class="col-md-2">동일학과번호</th>
+                            <th class="col-md-2">동일학과</th>
                             <th class="col-md-2">커뮤니티그룹</th>
                             <th style="width: 100px">관리</th>
                         </tr>
                     </thead>
                     <tbody>
+                    {% for department in department_list %}
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ department.id }}</td>
+                            <td>{{ department.college_name }}</td>
+                            <td>{{ department.name }}</td>
+                            <td>{% if department.same_department %}
+                                {{ department.same_department.name }}
+                            {% endif %}</td>
+                            <td>{{ department.community.name }}</td>
                             <td>
-                                <button class="btn btn-warning btn-xs">수정</button>
-                                <button class="btn btn-danger btn-xs">삭제</button>
+                                <a href="{% url 'department_update' university=student.university.id pk=department.id %}"><button class="btn btn-warning btn-xs">수정</button></a>
+                                <form onsubmit="submitResult('{{ department.name }}')" class="btn btn-xs" method="post" action="{% url 'department_delete' university=student.university.id pk=department.id %}">{% csrf_token %}
+                                    <button class="btn btn-danger btn-xs">삭제</button></form>
                             </td>
                         </tr>
+                    {% endfor %}
                         <tr>
                             <td></td>
                             <td></td>
@@ -53,7 +58,7 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <button class="btn btn-primary btn-xs">추가</button>
+                                <a href="{% url 'department_add' university=student.university.id %}"><button class="btn btn-primary btn-xs">추가</button></a>
                             </td>
                         </tr>
                     </tbody>
@@ -72,5 +77,15 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
+<script>
+    function submitResult(name){
+        if( confirm(name+"을(를) 정말 삭제하시겠습니까?")==false ){
+            return false;
+        }else{
+            return true;
+        }
+    }
+</script>
 
 {% include "include/footer.html" %}

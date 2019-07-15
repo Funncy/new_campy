@@ -33,6 +33,8 @@ urlpatterns = [
          name='department_add'),
     path('department/<int:university>/<int:pk>/update/', views.DepartmentUV.as_view(),
          name='department_update'),
+    path('department/<int:university>/<int:pk>/delete/', views.DepartmentDeleteV.as_view(),
+         name='department_delete'),
 
     #커뮤니티 그룹
     path('community/', views.CommunityLV.as_view(),

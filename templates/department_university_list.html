@@ -29,11 +29,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>세종대학교</td>
-                            <!--td클릭시 창 전환-->
-                            <td>여러개</td>
+                    {% for university in university_list %}
+                        <tr onclick="document.location='{% url 'department_list' university=university.id %}'">
+                            <td>{{ university.name }}</td>
+                            <td>{{ university.department_set.count }}</td>
                         </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
