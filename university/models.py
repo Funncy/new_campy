@@ -21,9 +21,15 @@ class CompletionDivision(models.Model):
     name = models.CharField(verbose_name='영역이름', max_length=10)
     group_name = models.CharField(verbose_name='그룹이름', max_length=10)
 
+    def get_division_by_university(university_id):
+        return CompletionDivision.objects.filter(university=university_id)
+
 class Area(models.Model):
     university = models.ForeignKey(University, verbose_name='대학', on_delete=models.CASCADE)
     name = models.CharField(verbose_name='영역이름', max_length=10)
+
+    def get_area_by_university(university_id):
+        return Area.objects.filter(university=university_id)
 
 class Community(models.Model):
     name = models.CharField(verbose_name='커뮤니티이름', max_length=20)
@@ -31,6 +37,9 @@ class Community(models.Model):
 class Track(models.Model):
     university = models.ForeignKey(University, verbose_name='대학', on_delete=models.CASCADE)
     name = models.CharField(verbose_name='트랙이름', max_length=20)
+
+    def get_track_by_university(university_id):
+        return Track.objects.filter(university=university_id)
 
 class Department(models.Model):
     university = models.ForeignKey(University, verbose_name='대학', on_delete=models.CASCADE)

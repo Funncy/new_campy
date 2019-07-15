@@ -3,6 +3,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DetailView, D
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
+from student.models import StudentInfo
 from student.mixin import DefaultMixin, StaffRequiredMixin
 from .models import University, CompletionDivision, Area, Track, \
     Department, Community
@@ -60,6 +61,7 @@ class UniversityDataDV(DefaultMixin, StaffRequiredMixin, DetailView):
     model = University
     template_name = 'university_data_detail.html'
     active = 'universityDataActive'
+
 
     #정보 넘기기
     def get_context_data(self, *, object_list=None, **kwargs):

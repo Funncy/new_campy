@@ -31,14 +31,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>전공필수</td>
-                                        <td></td>
+                                    {% for division in university.completiondivision_set.all %}
+                                        <tr>
+                                        <td>{{ division.name }}</td>
+                                        <td>{{ division.group_name }}</td>
                                         <td>
                                             <button class="btn btn-warning btn-xs">수정</button>
                                             <button class="btn btn-danger btn-xs">삭제</button>
                                         </td>
                                     </tr>
+                                    {% endfor %}
                                     <tr>
                                         <td></td>
                                         <td></td>
@@ -58,13 +60,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>앨ㄹ랠래</td>
+                                    {% for area in university.area_set.all %}
+                                        <tr>
+                                        <td>{{ area.name }}</td>
                                         <td>
                                             <button class="btn btn-warning btn-xs">수정</button>
                                             <button class="btn btn-danger btn-xs">삭제</button>
                                         </td>
                                     </tr>
+                                    {% endfor %}
                                     <tr>
                                         <td></td>
                                         <td>
@@ -83,13 +87,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                {% for track in university.track_set.all %}
                                     <tr>
-                                        <td>앨ㄹ랠래</td>
+                                        <td>{{ track.name }}</td>
                                         <td>
                                             <button class="btn btn-warning btn-xs">수정</button>
                                             <button class="btn btn-danger btn-xs">삭제</button>
                                         </td>
                                     </tr>
+                                {% endfor %}
                                     <tr>
                                         <td></td>
                                         <td>
