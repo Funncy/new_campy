@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.shortcuts import reverse
 
-from university.models import University, Department
+from university.models import Department, University
 
 # Create your models here.
 

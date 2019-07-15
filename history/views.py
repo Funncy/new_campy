@@ -4,9 +4,10 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
 from .models import LectureHistory
-from .serializers import LectureHistorySerializer
+from .serializers import LectureHistoryChangeSerializer, LectureHistorySerachSerializer
 from student.mixin import DefaultMixin, LoginRequiredMixin
 from lecture.models import Subject
+from university.models import CompletionDivision
 
 # Create your views here.
 
@@ -25,6 +26,7 @@ class LectureHistoryLV(DefaultMixin, LoginRequiredMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['subjects'] = Subject.get_university_subject_list(self.request.user.id)
+        context['divisions'] = CompletionDivision.objects.filter(university=context['student'].university)
         return context
 
 '''
@@ -33,11 +35,18 @@ class LectureHistoryLV(DefaultMixin, LoginRequiredMixin, ListView):
 
 class LectureHistoryListViewset(ModelViewSet):
     queryset = LectureHistory.objects.all()
-    serializer_class = LectureHistorySerializer
-    permission_classes = (IsAuthenticated)
+    serializer_class = LectureHistorySerachSerializer
+    permission_classes = (IsAuthenticated, )
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return LectureHistorySerachSerializer
+        else:
+            return LectureHistoryChangeSerializer
+
 
     def get_queryset(self):
-        return LectureHistory.objects.filter(user_id=self.request.user.id)
+        return LectureHistory.get_user_history(self.request.user.id)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
