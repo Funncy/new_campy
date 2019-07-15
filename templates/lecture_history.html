@@ -142,7 +142,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <button class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
-                  <button class="btn btn-primary pull-right" id="subject_submit">추가하기</button>
+                  <button class="btn btn-primary pull-right" id="subject_submit" data-dismiss="modal">추가하기</button>
                 </div>
             </div>
             </div>
@@ -165,6 +165,10 @@
                       <div class="form-group">
                           <label>이수 학년</label>
                           <select class="form-control" id="update_year">
+                            <option value="1">1학년</option>
+                            <option value="2">2학년</option>
+                            <option value="3">3학년</option>
+                            <option value="4">4학년</option>
                           </select>
                       </div>
                   </div>
@@ -196,7 +200,7 @@
                           <label>과목 이름</label>
                           <select class="form-control select2" id="update_subject_name" style="width:100%;">
                               {% for subject in subjects %}
-                                  <option value="{{ subject.subject_code }}">{{ subject.subject_name }}</option>
+                                  <option value="{{ subject.code }}">{{ subject.name }}</option>
                               {% endfor %}
                           </select>
                       </div>
@@ -221,7 +225,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <button class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
-                  <button class="btn btn-primary pull-right">수정하기</button>
+                  <button class="btn btn-primary pull-right" data-dismiss="modal" id="update_submit">수정하기</button>
                 </div>
             </div>
             </div>
@@ -245,7 +249,7 @@
                       <div class="row">
                           <div class="col-md-12">
                             <button class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
-                            <button class="btn btn-danger pull-right" data-dismiss="modal">삭제</button>
+                            <button class="btn btn-danger pull-right" data-dismiss="modal" id="delete_submit">삭제</button>
                           </div>
                       </div>
                   </div>
@@ -304,7 +308,7 @@
                 +"</td><td>"+result[key].grade+"</td><td>"+result[key].subject.area.name
                 +"</td><td>"+result[key].subject.credit
                 +"</td><td><button class='btn btn-warning btn-xs' data-toggle='modal' onclick=update_modal('"+
-                +result[key].id+"','"+result[key].completion_year+"','"+result[key].completion_semester+"','"+result[key].completion_division.name+"','"+result[key].subject.name+"','"+result[key].grade+"')"
+                +result[key].id+"','"+result[key].completion_year+"','"+result[key].completion_semester+"','"+result[key].completion_division.id+"','"+result[key].subject.code+"','"+result[key].grade+"')"
                 +" data-target='#modal_subject_update' id='subject_update'>수정</button>"
                 +"<button class='btn btn-danger btn-xs' data-toggle='modal' onclick=delete_modal('"+
                 result[key].id+"','"+result[key].subject.name+"') data-target='#modal_subject_delete' id='subject_delete'>삭제</button></td>'</tr>")
@@ -319,13 +323,12 @@
             })
     }
 
-    function update_modal(id, year, semester,subject_division, subject_name, grades){
-        alert(subject_name)
-      $('#update_subject_id').val(id)
+    function update_modal(id, year, semester,subject_division, subject_code, grades){
+      $('#update_subject_id').text(id)
       $('#update_year').val(year)
       $('#update_semester').val(semester)
       $('#update_subject_division').val(subject_division)
-      $('#update_subject_name').val(subject_name)
+      $('#update_subject_name').val(subject_code)
       $('#update_grades').val(grades)
     }
 
@@ -338,9 +341,10 @@
     //추가모달 클릭시 ajax호출
     $('#subject_submit').click(function() {
         $.ajax({
-            url: '/lecture/api/history/',
+            url: '/history/api/history/',
             type: 'post',
             data: {
+              'university' : $('#university_id').text(),
               'subject' : $("#add_subject_name").val(),
               'grade' : $("#add_grades").val(),
               'completion_year' : $("#add_year").val(),
@@ -357,7 +361,7 @@
         })
 
     //삭제모달 클릭시 ajax호출
-    $('#modal_subject_delete').click(function() {
+    $('#delete_submit').click(function() {
         $.ajax({
             url: '/history/api/history/'+$("#delete_subject_id").text()+'/',
             type: 'delete',
@@ -374,7 +378,7 @@
 
 
     //수정모달 클릭시 ajax호출
-    $('#subject_update').click(function() {
+    $('#update_submit').click(function() {
         $.ajax({
             url: '/history/api/history/'+$("#update_subject_id").text()+'/',
             type: 'patch',
