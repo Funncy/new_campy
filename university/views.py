@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
@@ -7,6 +7,7 @@ from student.mixin import DefaultMixin, StaffRequiredMixin
 from .models import University, CompletionDivision, Area, Track, \
     Department, Community
 from .serializers import DepartmentSerializer, UniversitySerializer
+from .forms import UniversityForm
 
 # Create your views here.
 
@@ -21,16 +22,25 @@ class UniversityLV(DefaultMixin, StaffRequiredMixin, ListView):
 class UniversityCV(DefaultMixin, StaffRequiredMixin, CreateView):
     model = University
     template_name = 'university_form.html'
-    fields = ('name', 'maximum_credit')
+    form_class = UniversityForm
     active = 'universityActive'
     success_url = '/university/'
 
 class UniversityUV(DefaultMixin, StaffRequiredMixin, UpdateView):
     model = University
     template_name = 'university_form.html'
-    fields = ('name', 'maximum_credit')
+    form_class = UniversityForm
     active = 'universityActive'
     success_url = '/university/'
+
+class UniversityDeleteV(DefaultMixin, StaffRequiredMixin, DeleteView):
+    model = University
+    active = 'universityActive'
+    success_url = '/university/'
+
+    # get 막기 ( API처럼 사용 )
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
 
 '''
 대학정보 (이수구분, 영역, 트랙) CRU UI

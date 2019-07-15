@@ -15,6 +15,8 @@ urlpatterns = [
          name='university_add'),
     path('<int:pk>/update/', views.UniversityUV.as_view(),
          name='university_update'),
+    path('<int:pk>/delete/', views.UniversityDeleteV.as_view(),
+         name='university_delete'),
 
     #대학 데이터 CRU (이수구분, 영역, 트랙)
     path('data/', views.UniversityDataLV.as_view(),

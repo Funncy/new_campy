@@ -1,10 +1,20 @@
 from django.db import models
 
 # Create your models here.
+
 class University(models.Model):
+    FIRST = 4.5
+    SECOND = 4.3
+    THIRD = 4.0
+    CREDIT_CHOICES = (
+        (FIRST, '4.5'),
+        (SECOND, '4.3'),
+        (THIRD, '4.0'),
+    )
+
     name = models.CharField(verbose_name='대학이름', max_length=30)
     # minimum_credit = models.FloatField(verbose_name='최소학점')
-    maximum_credit = models.FloatField(verbose_name='최대학점')
+    maximum_credit = models.FloatField(verbose_name='최대학점', default=4.5, choices=CREDIT_CHOICES)
 
 class CompletionDivision(models.Model):
     university = models.ForeignKey(University, verbose_name='대학', on_delete=models.CASCADE)
