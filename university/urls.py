@@ -5,6 +5,7 @@ from . import views
 
 router = DefaultRouter()
 router.register(r'department', views.APIDepartmentModelViewset)
+router.register(r'university', views.UniversityGradeViewset)
 
 urlpatterns = [
     #대학 CRU

@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.permissions import IsAuthenticated
 
 from student.mixin import DefaultMixin, StaffRequiredMixin
 from .models import University, CompletionDivision, Area, Track, \
     Department, Community
-from .serializers import DepartmentSerializer
+from .serializers import DepartmentSerializer, UniversitySerializer
 
 # Create your views here.
 
@@ -110,3 +111,8 @@ class APIDepartmentModelViewset(ReadOnlyModelViewSet):
     def get_queryset(self):
         university = self.request.query_params.get('university')
         return Department.objects.filter(university=university)
+
+class UniversityGradeViewset(ReadOnlyModelViewSet):
+    queryset = University.objects.all()
+    serializer_class = UniversitySerializer
+    permission_classes = (IsAuthenticated, )
