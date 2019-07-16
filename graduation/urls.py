@@ -29,10 +29,12 @@ urlpatterns = [
          views.RuleGeneralDV.as_view(), name='rule_general_delete'),
 
 
-    path('rule/university/specific/<int:university>/<int:year>/<int:track>/',
+    path('rule/university/specific/<int:university>/<int:year>/<int:department>/<int:track>/',
          views.RuleSpecificLV.as_view(), name='rule_specific_list'),
-    path('rule/university/specific/<int:university>/<int:year>/add/',
+    path('rule/university/specific/<int:university>/<int:year>/<int:department>/add/',
          views.RuleSpecificCV.as_view(), name='rule_specific_add'),
-    path('rule/university/specific/<int:university>/<int:year>/<int:pk>/update/',
+    path('rule/university/specific/<int:university>/<int:year>/<int:department>/<int:pk>/update/',
          views.RuleSpecificUV.as_view(), name='rule_specific_update'),
+    path('rule/university/specific/<int:university>/<int:year>/<int:department>/<int:pk>/delete/',
+         views.RuleSpecificDV.as_view(), name='rule_specific_delete'),
 ]

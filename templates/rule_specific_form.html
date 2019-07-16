@@ -4,11 +4,11 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
       <section class="content-header">
-          <h1>특정 졸업요건 - 대학명(생성/수정)
+          <h1>특정 졸업요건 - {{ current_university.name }}/{{ current_department.name }} 관리
             <small>Detailed Graduation Add</small>
           </h1>
           <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> 특정 졸업요건 - 대학명(생성/수정)</a></li>
+            <li><a href="#"><i class="fa fa-dashboard"></i> 특정 졸업요건 - {{ current_university.name }}/{{ current_department.name }} 관리</a></li>
           </ol>
       </section>
     <!-- Content Header (Page header) -->
@@ -17,65 +17,60 @@
       <div class="col-md-6" style="margin-left:25%">
         <div class="box box-primary">
           <div class="box-header">
-            <h4>특 졸업요건 생성/수정</h4>
+            <h4>특정 졸업요건 {% if object %}수정{% else %}생성{% endif %}</h4>
           </div>
+        {% if object %}
+            <form method="post" action="">
+        {% else %}
+            <form method="post" action="">
+        {% endif %}
+            {% csrf_token %}
           <div class="box-body">
             <div class="col-md-12">
                 <div class="row">
                     <div class="form-group col-md-12">
-                        <label>입학년도</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <label>이수트랙</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <label>학과</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <label>상위 졸업요건</label>
-                        <select class="form-control select2" style="width:100%"></select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-12">
                         <label>졸업요건 이름</label>
-                        <input type="text" class="form-control">
+                        {{ form.name }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label>트랙</label>
+                        {{ form.track }}
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <label>과목 그룹</label>
-                        <select class="form-control select2" style="width:100%"></select>
+                        {{ form.subject_group }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label>상위 졸업요건</label>
+                        {{ form.upper_rule }}
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <label>졸업요건 종류</label>
-                        <select class="form-control select2" style="width:100%"></select>
+                        {{ form.type }}
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <label>졸업요건 지정 값(최소값)</label>
-                        <input type="text" class="form-control">
+                        {{ form.value }}
                     </div>
                 </div>
             </div>
           </div>
           <div class="box-footer">
               <div class="col-md-12">
-                <button class="btn btn-primary pull-right">생성/수정하기</button>
+                <button type="submit" class="btn btn-primary pull-right">{% if object %}수정{% else %}생성{% endif %}</button>
               </div>
           </div>
+            </form>
         </div>
       </div>
 

@@ -64,7 +64,7 @@
                         <td>
                           <a href="{% url 'rule_general_update' university=current_university.id year=current_year pk=rule.id %}">
                               <button class="btn btn-warning btn-xs">수정</button></a>
-                          <form onsubmit="submitResult('{{ rule.name }}')" method="post" action="{% url 'rule_general_delete' university=current_university.id year=current_year pk=rule.id %}">
+                          <form class="btn btn-xs" onsubmit="submitResult('{{ rule.name }}')" method="post" action="{% url 'rule_general_delete' university=current_university.id year=current_year pk=rule.id %}">
                               {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-xs">삭제</button>
                           </form>

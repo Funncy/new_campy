@@ -51,10 +51,45 @@ class RuleGeneralForm(forms.ModelForm):
         university = kwargs.pop('university', None)
         super().__init__(*args, **kwargs)
         # track, subject_group 대학 소속 데이터 불러오기
-        YEAR_CHOICES = [tuple([x, x]) for x in reversed(range(1950, 2021))]
 
         self.fields['track'].choices = [(u.id, u.name) for u in
                                         Track.objects.filter(university=university)]
         self.fields['subject_group'].choices = [(u.id, u.name) for u in
                                         SubjectGroup.objects.filter(university=university)]
 
+
+class RuleSpecificForm(forms.ModelForm):
+
+    value = forms.IntegerField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'style': 'width:100%;'}))
+
+    class Meta:
+        model = RuleSpecific
+        fields = ['name', 'track', 'type', 'value', 'subject_group', 'upper_rule']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control',
+                                           'style': 'width:100%;',
+                                           'placeholder': '과목그룹 이름을 입력해주세요.'}),
+            'track': forms.Select(attrs={'class': 'form-control select2',
+                                         'style': 'width:100%;'}),
+            'type': forms.Select(attrs={'class': 'form-control select2',
+                                        'style': 'width:100%;'}),
+            'subject_group': forms.Select(attrs={'class': 'form-control select2',
+                                                 'style': 'width:100%;'}),
+            'upper_rule': forms.Select(attrs={'class': 'form-control select2',
+                                                 'style': 'width:100%;'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        university = kwargs.pop('university', None)
+        super().__init__(*args, **kwargs)
+        # track, subject_group 대학 소속 데이터 불러오기
+
+        self.fields['track'].choices = [(u.id, u.name) for u in
+                                        Track.objects.filter(university=university)]
+        self.fields['subject_group'].choices = [(u.id, u.name) for u in
+                                        SubjectGroup.objects.filter(university=university)]
+        self.fields['upper_rule'].choices = [(None, '없음')]
+        self.fields['upper_rule'].choices += [(u.id, u.track.name + ' : ' + u.name) for u in
+                                                RuleGeneral.objects.filter(university=university)]
