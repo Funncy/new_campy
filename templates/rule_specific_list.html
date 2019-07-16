@@ -59,6 +59,7 @@
                   <tr>
                     <th>졸업요건 이름</th>
                     <th>상위 졸업요건 이름</th>
+                    <th>수정 졸업 요건 이름</th>
                     <th>요건 종류</th>
                     <th>요건 값</th>
                     <th>관리</th>
@@ -69,6 +70,7 @@
                     <tr>
                     <td>{{ rule.name }}</td>
                     <td>{{ rule.upper_rule.name }}</td>
+                    <td>{{ rule.change_rule.name }}</td>
                     <td>{{ rule.get_type_display }}</td>
                     <td>{{ rule.value }}</td>
                     <td>
@@ -82,6 +84,7 @@
                   </tr>
                 {% endfor %}
                   <tr>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>

@@ -263,6 +263,8 @@ class RuleSpecificCV(DefaultMixin, StaffRequiredMixin, CreateView):
     def get_form_kwargs(self, *args, **kwargs):
         kwargs = super().get_form_kwargs(*args, **kwargs)
         kwargs['university'] = StudentInfo.objects.get(user_id=self.request.user.id).university_id
+        kwargs['year'] = self.kwargs['year']
+        kwargs['department'] = Department.objects.get(pk=self.kwargs['department'])
         return kwargs
 
     # 화면에 대학정보 뿌려주기 위함
@@ -299,6 +301,8 @@ class RuleSpecificUV(DefaultMixin, StaffRequiredMixin, UpdateView):
     def get_form_kwargs(self, *args, **kwargs):
         kwargs = super().get_form_kwargs(*args, **kwargs)
         kwargs['university'] = StudentInfo.objects.get(user_id=self.request.user.id).university_id
+        kwargs['year'] = self.kwargs['year']
+        kwargs['department'] = Department.objects.get(pk=self.kwargs['department'])
         return kwargs
 
     # 화면에 대학정보 뿌려주기 위함

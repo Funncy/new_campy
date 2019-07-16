@@ -66,7 +66,7 @@ class RuleSpecificForm(forms.ModelForm):
 
     class Meta:
         model = RuleSpecific
-        fields = ['name', 'track', 'type', 'value', 'subject_group', 'upper_rule']
+        fields = ['name', 'track', 'type', 'value', 'subject_group', 'upper_rule', 'change_rule']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control',
                                            'style': 'width:100%;',
@@ -79,10 +79,14 @@ class RuleSpecificForm(forms.ModelForm):
                                                  'style': 'width:100%;'}),
             'upper_rule': forms.Select(attrs={'class': 'form-control select2',
                                                  'style': 'width:100%;'}),
+            'change_rule': forms.Select(attrs={'class': 'form-control select2',
+                                              'style': 'width:100%;'}),
         }
 
     def __init__(self, *args, **kwargs):
         university = kwargs.pop('university', None)
+        year = kwargs.pop('year', None)
+        department = kwargs.pop('department', None)
         super().__init__(*args, **kwargs)
         # track, subject_group 대학 소속 데이터 불러오기
 
@@ -93,3 +97,8 @@ class RuleSpecificForm(forms.ModelForm):
         self.fields['upper_rule'].choices = [(None, '없음')]
         self.fields['upper_rule'].choices += [(u.id, u.track.name + ' : ' + u.name) for u in
                                                 RuleGeneral.objects.filter(university=university)]
+        self.fields['change_rule'].choices = [(None, '없음')]
+        self.fields['change_rule'].choices += [(u.id, u.track.name + ' : ' + u.name) for u in
+                                              RuleSpecific.objects.filter(university=university,
+                                                                          department=department,
+                                                                          year=year)]

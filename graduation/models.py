@@ -37,4 +37,5 @@ class RuleSpecific(models.Model):
     type = models.SmallIntegerField(verbose_name='졸업요건타입', choices=RULE_TYPE_CHOICES, default=1)
     value = models.SmallIntegerField(verbose_name='졸업요건값', default=0)
     upper_rule = models.ForeignKey(RuleGeneral, verbose_name='상위졸업요건', on_delete=models.CASCADE, null=True, blank=True)
+    change_rule = models.ForeignKey('self', verbose_name='특정룰 변경', on_delete=models.CASCADE, null=True, blank=True)
     subject_group = models.ForeignKey(SubjectGroup, verbose_name='과목그룹', on_delete=models.CASCADE)
