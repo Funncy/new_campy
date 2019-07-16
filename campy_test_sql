@@ -1,0 +1,1019 @@
+-- MySQL dump 10.17  Distrib 10.3.15-MariaDB, for osx10.14 (x86_64)
+--
+-- Host: localhost    Database: campy2
+-- ------------------------------------------------------
+-- Server version	8.0.12
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `account_emailaddress`
+--
+
+DROP TABLE IF EXISTS `account_emailaddress`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `account_emailaddress` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(254) NOT NULL,
+  `verified` tinyint(1) NOT NULL,
+  `primary` tinyint(1) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`),
+  KEY `account_emailaddress_user_id_2c513194_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `account_emailaddress_user_id_2c513194_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `account_emailaddress`
+--
+
+LOCK TABLES `account_emailaddress` WRITE;
+/*!40000 ALTER TABLE `account_emailaddress` DISABLE KEYS */;
+INSERT INTO `account_emailaddress` VALUES (1,'gywns6222@gmail.com',0,1,2);
+/*!40000 ALTER TABLE `account_emailaddress` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `account_emailconfirmation`
+--
+
+DROP TABLE IF EXISTS `account_emailconfirmation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `account_emailconfirmation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` datetime(6) NOT NULL,
+  `sent` datetime(6) DEFAULT NULL,
+  `key` varchar(64) NOT NULL,
+  `email_address_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `key` (`key`),
+  KEY `account_emailconfirm_email_address_id_5b7f8c58_fk_account_e` (`email_address_id`),
+  CONSTRAINT `account_emailconfirm_email_address_id_5b7f8c58_fk_account_e` FOREIGN KEY (`email_address_id`) REFERENCES `account_emailaddress` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `account_emailconfirmation`
+--
+
+LOCK TABLES `account_emailconfirmation` WRITE;
+/*!40000 ALTER TABLE `account_emailconfirmation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `account_emailconfirmation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_group`
+--
+
+DROP TABLE IF EXISTS `auth_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(80) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_group`
+--
+
+LOCK TABLES `auth_group` WRITE;
+/*!40000 ALTER TABLE `auth_group` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_group` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_group_permissions`
+--
+
+DROP TABLE IF EXISTS `auth_group_permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_group_permissions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) NOT NULL,
+  `permission_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` (`group_id`,`permission_id`),
+  KEY `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` (`permission_id`),
+  CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
+  CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_group_permissions`
+--
+
+LOCK TABLES `auth_group_permissions` WRITE;
+/*!40000 ALTER TABLE `auth_group_permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_group_permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_permission`
+--
+
+DROP TABLE IF EXISTS `auth_permission`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_permission` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `content_type_id` int(11) NOT NULL,
+  `codename` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
+  CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_permission`
+--
+
+LOCK TABLES `auth_permission` WRITE;
+/*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
+INSERT INTO `auth_permission` VALUES (1,'Can add log entry',1,'add_logentry'),(2,'Can change log entry',1,'change_logentry'),(3,'Can delete log entry',1,'delete_logentry'),(4,'Can view log entry',1,'view_logentry'),(5,'Can add permission',2,'add_permission'),(6,'Can change permission',2,'change_permission'),(7,'Can delete permission',2,'delete_permission'),(8,'Can view permission',2,'view_permission'),(9,'Can add group',3,'add_group'),(10,'Can change group',3,'change_group'),(11,'Can delete group',3,'delete_group'),(12,'Can view group',3,'view_group'),(13,'Can add user',4,'add_user'),(14,'Can change user',4,'change_user'),(15,'Can delete user',4,'delete_user'),(16,'Can view user',4,'view_user'),(17,'Can add content type',5,'add_contenttype'),(18,'Can change content type',5,'change_contenttype'),(19,'Can delete content type',5,'delete_contenttype'),(20,'Can view content type',5,'view_contenttype'),(21,'Can add session',6,'add_session'),(22,'Can change session',6,'change_session'),(23,'Can delete session',6,'delete_session'),(24,'Can view session',6,'view_session'),(25,'Can add site',7,'add_site'),(26,'Can change site',7,'change_site'),(27,'Can delete site',7,'delete_site'),(28,'Can view site',7,'view_site'),(29,'Can add email address',8,'add_emailaddress'),(30,'Can change email address',8,'change_emailaddress'),(31,'Can delete email address',8,'delete_emailaddress'),(32,'Can view email address',8,'view_emailaddress'),(33,'Can add email confirmation',9,'add_emailconfirmation'),(34,'Can change email confirmation',9,'change_emailconfirmation'),(35,'Can delete email confirmation',9,'delete_emailconfirmation'),(36,'Can view email confirmation',9,'view_emailconfirmation'),(37,'Can add social account',10,'add_socialaccount'),(38,'Can change social account',10,'change_socialaccount'),(39,'Can delete social account',10,'delete_socialaccount'),(40,'Can view social account',10,'view_socialaccount'),(41,'Can add social application',11,'add_socialapp'),(42,'Can change social application',11,'change_socialapp'),(43,'Can delete social application',11,'delete_socialapp'),(44,'Can view social application',11,'view_socialapp'),(45,'Can add social application token',12,'add_socialtoken'),(46,'Can change social application token',12,'change_socialtoken'),(47,'Can delete social application token',12,'delete_socialtoken'),(48,'Can view social application token',12,'view_socialtoken'),(49,'Can add rule general',13,'add_rulegeneral'),(50,'Can change rule general',13,'change_rulegeneral'),(51,'Can delete rule general',13,'delete_rulegeneral'),(52,'Can view rule general',13,'view_rulegeneral'),(53,'Can add subject group',14,'add_subjectgroup'),(54,'Can change subject group',14,'change_subjectgroup'),(55,'Can delete subject group',14,'delete_subjectgroup'),(56,'Can view subject group',14,'view_subjectgroup'),(57,'Can add rule specific',15,'add_rulespecific'),(58,'Can change rule specific',15,'change_rulespecific'),(59,'Can delete rule specific',15,'delete_rulespecific'),(60,'Can view rule specific',15,'view_rulespecific'),(61,'Can add lecture history',16,'add_lecturehistory'),(62,'Can change lecture history',16,'change_lecturehistory'),(63,'Can delete lecture history',16,'delete_lecturehistory'),(64,'Can view lecture history',16,'view_lecturehistory'),(65,'Can add subject',17,'add_subject'),(66,'Can change subject',17,'change_subject'),(67,'Can delete subject',17,'delete_subject'),(68,'Can view subject',17,'view_subject'),(69,'Can add lecture',18,'add_lecture'),(70,'Can change lecture',18,'change_lecture'),(71,'Can delete lecture',18,'delete_lecture'),(72,'Can view lecture',18,'view_lecture'),(73,'Can add schedule',19,'add_schedule'),(74,'Can change schedule',19,'change_schedule'),(75,'Can delete schedule',19,'delete_schedule'),(76,'Can view schedule',19,'view_schedule'),(77,'Can add student info',20,'add_studentinfo'),(78,'Can change student info',20,'change_studentinfo'),(79,'Can delete student info',20,'delete_studentinfo'),(80,'Can view student info',20,'view_studentinfo'),(81,'Can add student added major',21,'add_studentaddedmajor'),(82,'Can change student added major',21,'change_studentaddedmajor'),(83,'Can delete student added major',21,'delete_studentaddedmajor'),(84,'Can view student added major',21,'view_studentaddedmajor'),(85,'Can add completion division',22,'add_completiondivision'),(86,'Can change completion division',22,'change_completiondivision'),(87,'Can delete completion division',22,'delete_completiondivision'),(88,'Can view completion division',22,'view_completiondivision'),(89,'Can add community',23,'add_community'),(90,'Can change community',23,'change_community'),(91,'Can delete community',23,'delete_community'),(92,'Can view community',23,'view_community'),(93,'Can add university',24,'add_university'),(94,'Can change university',24,'change_university'),(95,'Can delete university',24,'delete_university'),(96,'Can view university',24,'view_university'),(97,'Can add area',25,'add_area'),(98,'Can change area',25,'change_area'),(99,'Can delete area',25,'delete_area'),(100,'Can view area',25,'view_area'),(101,'Can add track',26,'add_track'),(102,'Can change track',26,'change_track'),(103,'Can delete track',26,'delete_track'),(104,'Can view track',26,'view_track'),(105,'Can add department',27,'add_department'),(106,'Can change department',27,'change_department'),(107,'Can delete department',27,'delete_department'),(108,'Can view department',27,'view_department');
+/*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_user`
+--
+
+DROP TABLE IF EXISTS `auth_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `password` varchar(128) NOT NULL,
+  `last_login` datetime(6) DEFAULT NULL,
+  `is_superuser` tinyint(1) NOT NULL,
+  `username` varchar(150) NOT NULL,
+  `first_name` varchar(30) NOT NULL,
+  `last_name` varchar(150) NOT NULL,
+  `email` varchar(254) NOT NULL,
+  `is_staff` tinyint(1) NOT NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `date_joined` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_user`
+--
+
+LOCK TABLES `auth_user` WRITE;
+/*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
+INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$120000$5T53B9hgTKNL$WNC9WzgxY4M02uf9inM8iAV39jW+Pgn+t5auzScEnww=','2019-07-12 09:49:18.654166',1,'gywns41','','','gywns41@naver.com',1,1,'2019-07-11 06:24:19.846204'),(2,'!5aeDoHALK9hKfhg2ZfK65i43XC7s5tOefgp2z4rX','2019-07-12 05:21:16.574573',0,'gywns6222','김','효준','gywns6222@gmail.com',0,1,'2019-07-11 16:40:48.452165');
+/*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_user_groups`
+--
+
+DROP TABLE IF EXISTS `auth_user_groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_user_groups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_user_groups_user_id_group_id_94350c0c_uniq` (`user_id`,`group_id`),
+  KEY `auth_user_groups_group_id_97559544_fk_auth_group_id` (`group_id`),
+  CONSTRAINT `auth_user_groups_group_id_97559544_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`),
+  CONSTRAINT `auth_user_groups_user_id_6a12ed8b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_user_groups`
+--
+
+LOCK TABLES `auth_user_groups` WRITE;
+/*!40000 ALTER TABLE `auth_user_groups` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_user_groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_user_user_permissions`
+--
+
+DROP TABLE IF EXISTS `auth_user_user_permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_user_user_permissions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `permission_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_user_user_permissions_user_id_permission_id_14a6b632_uniq` (`user_id`,`permission_id`),
+  KEY `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` (`permission_id`),
+  CONSTRAINT `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
+  CONSTRAINT `auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_user_user_permissions`
+--
+
+LOCK TABLES `auth_user_user_permissions` WRITE;
+/*!40000 ALTER TABLE `auth_user_user_permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_user_user_permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `django_admin_log`
+--
+
+DROP TABLE IF EXISTS `django_admin_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `django_admin_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `action_time` datetime(6) NOT NULL,
+  `object_id` longtext,
+  `object_repr` varchar(200) NOT NULL,
+  `action_flag` smallint(5) unsigned NOT NULL,
+  `change_message` longtext NOT NULL,
+  `content_type_id` int(11) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `django_admin_log_content_type_id_c4bce8eb_fk_django_co` (`content_type_id`),
+  KEY `django_admin_log_user_id_c564eba6_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
+  CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `django_admin_log`
+--
+
+LOCK TABLES `django_admin_log` WRITE;
+/*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
+INSERT INTO `django_admin_log` VALUES (1,'2019-07-11 16:39:28.018840','1','127.0.0.1:8000',2,'[{\"changed\": {\"fields\": [\"domain\"]}}]',7,1),(2,'2019-07-11 16:40:44.072527','1','campy_facebook',1,'[{\"added\": {}}]',11,1);
+/*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `django_content_type`
+--
+
+DROP TABLE IF EXISTS `django_content_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `django_content_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `app_label` varchar(100) NOT NULL,
+  `model` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `django_content_type`
+--
+
+LOCK TABLES `django_content_type` WRITE;
+/*!40000 ALTER TABLE `django_content_type` DISABLE KEYS */;
+INSERT INTO `django_content_type` VALUES (8,'account','emailaddress'),(9,'account','emailconfirmation'),(1,'admin','logentry'),(3,'auth','group'),(2,'auth','permission'),(4,'auth','user'),(5,'contenttypes','contenttype'),(13,'graduation','rulegeneral'),(15,'graduation','rulespecific'),(14,'graduation','subjectgroup'),(16,'history','lecturehistory'),(18,'lecture','lecture'),(17,'lecture','subject'),(19,'schedule','schedule'),(6,'sessions','session'),(7,'sites','site'),(10,'socialaccount','socialaccount'),(11,'socialaccount','socialapp'),(12,'socialaccount','socialtoken'),(21,'student','studentaddedmajor'),(20,'student','studentinfo'),(25,'university','area'),(23,'university','community'),(22,'university','completiondivision'),(27,'university','department'),(26,'university','track'),(24,'university','university');
+/*!40000 ALTER TABLE `django_content_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `django_migrations`
+--
+
+DROP TABLE IF EXISTS `django_migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `django_migrations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `app` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `applied` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `django_migrations`
+--
+
+LOCK TABLES `django_migrations` WRITE;
+/*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
+INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2019-07-10 16:13:22.562461'),(2,'auth','0001_initial','2019-07-10 16:13:22.779491'),(3,'account','0001_initial','2019-07-10 16:13:22.849516'),(4,'account','0002_email_max_length','2019-07-10 16:13:22.910625'),(5,'admin','0001_initial','2019-07-10 16:13:22.967140'),(6,'admin','0002_logentry_remove_auto_add','2019-07-10 16:13:22.975916'),(7,'admin','0003_logentry_add_action_flag_choices','2019-07-10 16:13:22.985746'),(8,'contenttypes','0002_remove_content_type_name','2019-07-10 16:13:23.036957'),(9,'auth','0002_alter_permission_name_max_length','2019-07-10 16:13:23.061745'),(10,'auth','0003_alter_user_email_max_length','2019-07-10 16:13:23.093264'),(11,'auth','0004_alter_user_username_opts','2019-07-10 16:13:23.101978'),(12,'auth','0005_alter_user_last_login_null','2019-07-10 16:13:23.130602'),(13,'auth','0006_require_contenttypes_0002','2019-07-10 16:13:23.132832'),(14,'auth','0007_alter_validators_add_error_messages','2019-07-10 16:13:23.140774'),(15,'auth','0008_alter_user_username_max_length','2019-07-10 16:13:23.173339'),(16,'auth','0009_alter_user_last_name_max_length','2019-07-10 16:13:23.209492'),(17,'sessions','0001_initial','2019-07-10 16:13:23.226102'),(18,'sites','0001_initial','2019-07-10 16:13:23.236758'),(19,'sites','0002_alter_domain_unique','2019-07-10 16:13:23.247155'),(20,'socialaccount','0001_initial','2019-07-10 16:13:23.417365'),(21,'socialaccount','0002_token_max_lengths','2019-07-10 16:13:23.455294'),(22,'socialaccount','0003_extra_data_default_dict','2019-07-10 16:13:23.462741'),(23,'university','0001_initial','2019-07-10 16:18:34.113801'),(24,'graduation','0001_initial','2019-07-10 16:18:34.334627'),(25,'lecture','0001_initial','2019-07-10 16:18:34.482972'),(26,'history','0001_initial','2019-07-10 16:18:34.582008'),(27,'schedule','0001_initial','2019-07-10 16:18:34.664750'),(28,'student','0001_initial','2019-07-10 16:18:34.804276'),(29,'student','0002_auto_20190712_1710','2019-07-12 08:11:02.551799'),(30,'student','0002_auto_20190712_1848','2019-07-15 11:23:31.525673'),(31,'university','0002_auto_20190715_2023','2019-07-15 11:23:31.534174');
+/*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `django_session`
+--
+
+DROP TABLE IF EXISTS `django_session`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `django_session` (
+  `session_key` varchar(40) NOT NULL,
+  `session_data` longtext NOT NULL,
+  `expire_date` datetime(6) NOT NULL,
+  PRIMARY KEY (`session_key`),
+  KEY `django_session_expire_date_a5c62663` (`expire_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `django_session`
+--
+
+LOCK TABLES `django_session` WRITE;
+/*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
+INSERT INTO `django_session` VALUES ('lmit07t2nl7fy8otzqno8lx89tzlsbmq','N2YzNmRjMjkxOWEyYzQyOTc0N2NlMTBlMjVhNTk3NmE4NWQyYWM5NTp7ImFsbGF1dGhfZmFjZWJvb2tfbm9uY2UiOiJtNWdFRGhadHhRZ0lEeWYySUNxd3hieVhQVWk2S0dveCIsIl9hdXRoX3VzZXJfaWQiOiIyIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJkNzljZmUyYzFkNGIzYTRkYWZhZWU2ZGI4Y2M4ZWUxMjNmZWZlYmI4In0=','2019-07-26 05:21:16.577421'),('of6306bqr6474fn313v3to0l9p8pehqs','ODQzZTNlYzE0NGE0OWZiZWYyNmQxNmVlYzNiYjZjZWZlZTE0MWU3YTp7ImFsbGF1dGhfZmFjZWJvb2tfbm9uY2UiOiJZcVBWNWJJTGxuWGxHeHpVRmVGcDhMcGl4U1lmdUFiNSIsIl9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJjMTZmZTY4Y2E5NzY0ZGY5NTk4ZWEyZTQ4ZWM2NDUxYzIzNjY2YTBlIn0=','2019-07-29 06:11:15.165356');
+/*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `django_site`
+--
+
+DROP TABLE IF EXISTS `django_site`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `django_site` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `domain` varchar(100) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `django_site_domain_a2e37b91_uniq` (`domain`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `django_site`
+--
+
+LOCK TABLES `django_site` WRITE;
+/*!40000 ALTER TABLE `django_site` DISABLE KEYS */;
+INSERT INTO `django_site` VALUES (1,'127.0.0.1:8000','example.com');
+/*!40000 ALTER TABLE `django_site` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `graduation_rulegeneral`
+--
+
+DROP TABLE IF EXISTS `graduation_rulegeneral`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `graduation_rulegeneral` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `type` varchar(20) NOT NULL,
+  `value` smallint(6) NOT NULL,
+  `subject_group_id` int(11) NOT NULL,
+  `track_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `graduation_rulegener_subject_group_id_aab87605_fk_graduatio` (`subject_group_id`),
+  KEY `graduation_rulegeneral_track_id_dc2030be_fk_university_track_id` (`track_id`),
+  CONSTRAINT `graduation_rulegener_subject_group_id_aab87605_fk_graduatio` FOREIGN KEY (`subject_group_id`) REFERENCES `graduation_subjectgroup` (`id`),
+  CONSTRAINT `graduation_rulegeneral_track_id_dc2030be_fk_university_track_id` FOREIGN KEY (`track_id`) REFERENCES `university_track` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `graduation_rulegeneral`
+--
+
+LOCK TABLES `graduation_rulegeneral` WRITE;
+/*!40000 ALTER TABLE `graduation_rulegeneral` DISABLE KEYS */;
+/*!40000 ALTER TABLE `graduation_rulegeneral` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `graduation_rulespecific`
+--
+
+DROP TABLE IF EXISTS `graduation_rulespecific`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `graduation_rulespecific` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `type` varchar(20) NOT NULL,
+  `value` smallint(6) NOT NULL,
+  `subject_group_id` int(11) NOT NULL,
+  `track_id` int(11) NOT NULL,
+  `upper_rule_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `graduation_rulespeci_subject_group_id_a14ef3da_fk_graduatio` (`subject_group_id`),
+  KEY `graduation_rulespecific_track_id_399bbf25_fk_university_track_id` (`track_id`),
+  KEY `graduation_rulespeci_upper_rule_id_68695872_fk_graduatio` (`upper_rule_id`),
+  CONSTRAINT `graduation_rulespeci_subject_group_id_a14ef3da_fk_graduatio` FOREIGN KEY (`subject_group_id`) REFERENCES `graduation_subjectgroup` (`id`),
+  CONSTRAINT `graduation_rulespeci_upper_rule_id_68695872_fk_graduatio` FOREIGN KEY (`upper_rule_id`) REFERENCES `graduation_rulegeneral` (`id`),
+  CONSTRAINT `graduation_rulespecific_track_id_399bbf25_fk_university_track_id` FOREIGN KEY (`track_id`) REFERENCES `university_track` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `graduation_rulespecific`
+--
+
+LOCK TABLES `graduation_rulespecific` WRITE;
+/*!40000 ALTER TABLE `graduation_rulespecific` DISABLE KEYS */;
+/*!40000 ALTER TABLE `graduation_rulespecific` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `graduation_subjectgroup`
+--
+
+DROP TABLE IF EXISTS `graduation_subjectgroup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `graduation_subjectgroup` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `graduation_subjectgroup`
+--
+
+LOCK TABLES `graduation_subjectgroup` WRITE;
+/*!40000 ALTER TABLE `graduation_subjectgroup` DISABLE KEYS */;
+/*!40000 ALTER TABLE `graduation_subjectgroup` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `graduation_subjectgroup_completion_divisions`
+--
+
+DROP TABLE IF EXISTS `graduation_subjectgroup_completion_divisions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `graduation_subjectgroup_completion_divisions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `subjectgroup_id` int(11) NOT NULL,
+  `completiondivision_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `graduation_subjectgroup__subjectgroup_id_completi_675a00b7_uniq` (`subjectgroup_id`,`completiondivision_id`),
+  KEY `graduation_subjectgr_completiondivision_i_4c8f9192_fk_universit` (`completiondivision_id`),
+  CONSTRAINT `graduation_subjectgr_completiondivision_i_4c8f9192_fk_universit` FOREIGN KEY (`completiondivision_id`) REFERENCES `university_completiondivision` (`id`),
+  CONSTRAINT `graduation_subjectgr_subjectgroup_id_752e0fba_fk_graduatio` FOREIGN KEY (`subjectgroup_id`) REFERENCES `graduation_subjectgroup` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `graduation_subjectgroup_completion_divisions`
+--
+
+LOCK TABLES `graduation_subjectgroup_completion_divisions` WRITE;
+/*!40000 ALTER TABLE `graduation_subjectgroup_completion_divisions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `graduation_subjectgroup_completion_divisions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `history_lecturehistory`
+--
+
+DROP TABLE IF EXISTS `history_lecturehistory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `history_lecturehistory` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `grade` varchar(10) NOT NULL,
+  `completion_year` smallint(6) NOT NULL,
+  `completion_semester` smallint(6) NOT NULL,
+  `completion_division_id` int(11) NOT NULL,
+  `subject_id` varchar(20) NOT NULL,
+  `university_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `history_lecturehisto_completion_division__0bc932fc_fk_universit` (`completion_division_id`),
+  KEY `history_lecturehisto_subject_id_bbdb4752_fk_lecture_s` (`subject_id`),
+  KEY `history_lecturehisto_university_id_e9108332_fk_universit` (`university_id`),
+  KEY `history_lecturehistory_user_id_86f7bae9_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `history_lecturehisto_completion_division__0bc932fc_fk_universit` FOREIGN KEY (`completion_division_id`) REFERENCES `university_completiondivision` (`id`),
+  CONSTRAINT `history_lecturehisto_subject_id_bbdb4752_fk_lecture_s` FOREIGN KEY (`subject_id`) REFERENCES `lecture_subject` (`code`),
+  CONSTRAINT `history_lecturehisto_university_id_e9108332_fk_universit` FOREIGN KEY (`university_id`) REFERENCES `university_university` (`id`),
+  CONSTRAINT `history_lecturehistory_user_id_86f7bae9_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `history_lecturehistory`
+--
+
+LOCK TABLES `history_lecturehistory` WRITE;
+/*!40000 ALTER TABLE `history_lecturehistory` DISABLE KEYS */;
+INSERT INTO `history_lecturehistory` VALUES (2,'P',1,3,2,'01231',1,1);
+/*!40000 ALTER TABLE `history_lecturehistory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `lecture_lecture`
+--
+
+DROP TABLE IF EXISTS `lecture_lecture`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lecture_lecture` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(20) NOT NULL,
+  `professor` varchar(10) NOT NULL,
+  `class_room` varchar(15) NOT NULL,
+  `week` varchar(5) NOT NULL,
+  `start_time` time(6) NOT NULL,
+  `end_time` time(6) NOT NULL,
+  `opened_year` smallint(6) NOT NULL,
+  `opened_semester` smallint(6) NOT NULL,
+  `opened_department_id` int(11) NOT NULL,
+  `subject_id` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `lecture_lecture_opened_department_id_9c75b101_fk_universit` (`opened_department_id`),
+  KEY `lecture_lecture_subject_id_f8ebada0_fk_lecture_subject_code` (`subject_id`),
+  CONSTRAINT `lecture_lecture_opened_department_id_9c75b101_fk_universit` FOREIGN KEY (`opened_department_id`) REFERENCES `university_department` (`id`),
+  CONSTRAINT `lecture_lecture_subject_id_f8ebada0_fk_lecture_subject_code` FOREIGN KEY (`subject_id`) REFERENCES `lecture_subject` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lecture_lecture`
+--
+
+LOCK TABLES `lecture_lecture` WRITE;
+/*!40000 ALTER TABLE `lecture_lecture` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lecture_lecture` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `lecture_subject`
+--
+
+DROP TABLE IF EXISTS `lecture_subject`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lecture_subject` (
+  `code` varchar(20) NOT NULL,
+  `name` varchar(20) NOT NULL,
+  `credit` double NOT NULL,
+  `area_id` int(11) NOT NULL,
+  `completion_division_id` int(11) NOT NULL,
+  `university_id` int(11) NOT NULL,
+  PRIMARY KEY (`code`),
+  KEY `lecture_subject_area_id_aeaac561_fk_university_area_id` (`area_id`),
+  KEY `lecture_subject_completion_division__9d176ad1_fk_universit` (`completion_division_id`),
+  KEY `lecture_subject_university_id_1ab49077_fk_universit` (`university_id`),
+  CONSTRAINT `lecture_subject_area_id_aeaac561_fk_university_area_id` FOREIGN KEY (`area_id`) REFERENCES `university_area` (`id`),
+  CONSTRAINT `lecture_subject_completion_division__9d176ad1_fk_universit` FOREIGN KEY (`completion_division_id`) REFERENCES `university_completiondivision` (`id`),
+  CONSTRAINT `lecture_subject_university_id_1ab49077_fk_universit` FOREIGN KEY (`university_id`) REFERENCES `university_university` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lecture_subject`
+--
+
+LOCK TABLES `lecture_subject` WRITE;
+/*!40000 ALTER TABLE `lecture_subject` DISABLE KEYS */;
+INSERT INTO `lecture_subject` VALUES ('01231','C언어',3,1,1,1);
+/*!40000 ALTER TABLE `lecture_subject` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `schedule_schedule`
+--
+
+DROP TABLE IF EXISTS `schedule_schedule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `schedule_schedule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `schedule_schedule_user_id_e9a0b84b_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `schedule_schedule_user_id_e9a0b84b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `schedule_schedule`
+--
+
+LOCK TABLES `schedule_schedule` WRITE;
+/*!40000 ALTER TABLE `schedule_schedule` DISABLE KEYS */;
+/*!40000 ALTER TABLE `schedule_schedule` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `schedule_schedule_lectures`
+--
+
+DROP TABLE IF EXISTS `schedule_schedule_lectures`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `schedule_schedule_lectures` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `schedule_id` int(11) NOT NULL,
+  `lecture_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `schedule_schedule_lectures_schedule_id_lecture_id_2afe7dbe_uniq` (`schedule_id`,`lecture_id`),
+  KEY `schedule_schedule_le_lecture_id_be3978e4_fk_lecture_l` (`lecture_id`),
+  CONSTRAINT `schedule_schedule_le_lecture_id_be3978e4_fk_lecture_l` FOREIGN KEY (`lecture_id`) REFERENCES `lecture_lecture` (`id`),
+  CONSTRAINT `schedule_schedule_le_schedule_id_ee8ea34d_fk_schedule_` FOREIGN KEY (`schedule_id`) REFERENCES `schedule_schedule` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `schedule_schedule_lectures`
+--
+
+LOCK TABLES `schedule_schedule_lectures` WRITE;
+/*!40000 ALTER TABLE `schedule_schedule_lectures` DISABLE KEYS */;
+/*!40000 ALTER TABLE `schedule_schedule_lectures` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `socialaccount_socialaccount`
+--
+
+DROP TABLE IF EXISTS `socialaccount_socialaccount`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `socialaccount_socialaccount` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `provider` varchar(30) NOT NULL,
+  `uid` varchar(191) NOT NULL,
+  `last_login` datetime(6) NOT NULL,
+  `date_joined` datetime(6) NOT NULL,
+  `extra_data` longtext NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `socialaccount_socialaccount_provider_uid_fc810c6e_uniq` (`provider`,`uid`),
+  KEY `socialaccount_socialaccount_user_id_8146e70c_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `socialaccount_socialaccount_user_id_8146e70c_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `socialaccount_socialaccount`
+--
+
+LOCK TABLES `socialaccount_socialaccount` WRITE;
+/*!40000 ALTER TABLE `socialaccount_socialaccount` DISABLE KEYS */;
+INSERT INTO `socialaccount_socialaccount` VALUES (1,'facebook','2190801864370464','2019-07-12 05:21:16.508876','2019-07-11 16:40:48.528001','{\"id\": \"2190801864370464\", \"email\": \"gywns6222@gmail.com\", \"name\": \"\\ud6a8\\uc900\\uae40\", \"first_name\": \"\\uae40\", \"last_name\": \"\\ud6a8\\uc900\", \"friends\": {\"data\": [], \"summary\": {\"total_count\": 0}}}',2);
+/*!40000 ALTER TABLE `socialaccount_socialaccount` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `socialaccount_socialapp`
+--
+
+DROP TABLE IF EXISTS `socialaccount_socialapp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `socialaccount_socialapp` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `provider` varchar(30) NOT NULL,
+  `name` varchar(40) NOT NULL,
+  `client_id` varchar(191) NOT NULL,
+  `secret` varchar(191) NOT NULL,
+  `key` varchar(191) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `socialaccount_socialapp`
+--
+
+LOCK TABLES `socialaccount_socialapp` WRITE;
+/*!40000 ALTER TABLE `socialaccount_socialapp` DISABLE KEYS */;
+INSERT INTO `socialaccount_socialapp` VALUES (1,'facebook','campy_facebook','601951443630168','829686ce99f86e56b63e10a12574e204','');
+/*!40000 ALTER TABLE `socialaccount_socialapp` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `socialaccount_socialapp_sites`
+--
+
+DROP TABLE IF EXISTS `socialaccount_socialapp_sites`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `socialaccount_socialapp_sites` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `socialapp_id` int(11) NOT NULL,
+  `site_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `socialaccount_socialapp_sites_socialapp_id_site_id_71a9a768_uniq` (`socialapp_id`,`site_id`),
+  KEY `socialaccount_socialapp_sites_site_id_2579dee5_fk_django_site_id` (`site_id`),
+  CONSTRAINT `socialaccount_social_socialapp_id_97fb6e7d_fk_socialacc` FOREIGN KEY (`socialapp_id`) REFERENCES `socialaccount_socialapp` (`id`),
+  CONSTRAINT `socialaccount_socialapp_sites_site_id_2579dee5_fk_django_site_id` FOREIGN KEY (`site_id`) REFERENCES `django_site` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `socialaccount_socialapp_sites`
+--
+
+LOCK TABLES `socialaccount_socialapp_sites` WRITE;
+/*!40000 ALTER TABLE `socialaccount_socialapp_sites` DISABLE KEYS */;
+INSERT INTO `socialaccount_socialapp_sites` VALUES (1,1,1);
+/*!40000 ALTER TABLE `socialaccount_socialapp_sites` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `socialaccount_socialtoken`
+--
+
+DROP TABLE IF EXISTS `socialaccount_socialtoken`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `socialaccount_socialtoken` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` longtext NOT NULL,
+  `token_secret` longtext NOT NULL,
+  `expires_at` datetime(6) DEFAULT NULL,
+  `account_id` int(11) NOT NULL,
+  `app_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `socialaccount_socialtoken_app_id_account_id_fca4e0ac_uniq` (`app_id`,`account_id`),
+  KEY `socialaccount_social_account_id_951f210e_fk_socialacc` (`account_id`),
+  CONSTRAINT `socialaccount_social_account_id_951f210e_fk_socialacc` FOREIGN KEY (`account_id`) REFERENCES `socialaccount_socialaccount` (`id`),
+  CONSTRAINT `socialaccount_social_app_id_636a42d7_fk_socialacc` FOREIGN KEY (`app_id`) REFERENCES `socialaccount_socialapp` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `socialaccount_socialtoken`
+--
+
+LOCK TABLES `socialaccount_socialtoken` WRITE;
+/*!40000 ALTER TABLE `socialaccount_socialtoken` DISABLE KEYS */;
+INSERT INTO `socialaccount_socialtoken` VALUES (1,'EAAIjeL34OFgBAEqrI0AzYh7l3YtTLfZBfbsGmhGbxP87WFfhBD6MAqnMREwudSVFYRBdeR6S00V7RDjOKS0Xf3w9foSB66ZA86P5nh2YA4W3w15x8PThKOqmiVEP6sZBYl2bU8yowEGQYNZAFeCCAOyi97zkQpFxPcDbfYAbvZAX1tFgZC2CMnFv4ZAAqBL9ZCcdKNS2zZCcmZCEboEopZAxrn8zu1baS5cAokZD','','2019-09-09 16:40:47.416574',1,1);
+/*!40000 ALTER TABLE `socialaccount_socialtoken` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `student_studentaddedmajor`
+--
+
+DROP TABLE IF EXISTS `student_studentaddedmajor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `student_studentaddedmajor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `major_division` varchar(20) NOT NULL,
+  `major_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `student_studentadded_major_id_08feb232_fk_universit` (`major_id`),
+  KEY `student_studentaddedmajor_user_id_9b4966e7_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `student_studentadded_major_id_08feb232_fk_universit` FOREIGN KEY (`major_id`) REFERENCES `university_department` (`id`),
+  CONSTRAINT `student_studentaddedmajor_user_id_9b4966e7_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student_studentaddedmajor`
+--
+
+LOCK TABLES `student_studentaddedmajor` WRITE;
+/*!40000 ALTER TABLE `student_studentaddedmajor` DISABLE KEYS */;
+/*!40000 ALTER TABLE `student_studentaddedmajor` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `student_studentinfo`
+--
+
+DROP TABLE IF EXISTS `student_studentinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `student_studentinfo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `admission_year` smallint(6) NOT NULL,
+  `major_id` int(11) NOT NULL,
+  `university_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `student_studentinfo_major_id_642a003f_fk_universit` (`major_id`),
+  KEY `student_studentinfo_university_id_0e52bfdb_fk_universit` (`university_id`),
+  KEY `student_studentinfo_user_id_7c626e78_fk_auth_user_id` (`user_id`),
+  CONSTRAINT `student_studentinfo_major_id_642a003f_fk_universit` FOREIGN KEY (`major_id`) REFERENCES `university_department` (`id`),
+  CONSTRAINT `student_studentinfo_university_id_0e52bfdb_fk_universit` FOREIGN KEY (`university_id`) REFERENCES `university_university` (`id`),
+  CONSTRAINT `student_studentinfo_user_id_7c626e78_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student_studentinfo`
+--
+
+LOCK TABLES `student_studentinfo` WRITE;
+/*!40000 ALTER TABLE `student_studentinfo` DISABLE KEYS */;
+INSERT INTO `student_studentinfo` VALUES (12,2019,1,1,1);
+/*!40000 ALTER TABLE `student_studentinfo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `university_area`
+--
+
+DROP TABLE IF EXISTS `university_area`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `university_area` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(10) NOT NULL,
+  `university_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `university_area_university_id_f08ea96e_fk_universit` (`university_id`),
+  CONSTRAINT `university_area_university_id_f08ea96e_fk_universit` FOREIGN KEY (`university_id`) REFERENCES `university_university` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `university_area`
+--
+
+LOCK TABLES `university_area` WRITE;
+/*!40000 ALTER TABLE `university_area` DISABLE KEYS */;
+INSERT INTO `university_area` VALUES (1,'전공필수',1),(2,'전공선택',1),(3,'중핵필수',1);
+/*!40000 ALTER TABLE `university_area` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `university_community`
+--
+
+DROP TABLE IF EXISTS `university_community`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `university_community` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `university_community`
+--
+
+LOCK TABLES `university_community` WRITE;
+/*!40000 ALTER TABLE `university_community` DISABLE KEYS */;
+INSERT INTO `university_community` VALUES (1,'공통');
+/*!40000 ALTER TABLE `university_community` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `university_completiondivision`
+--
+
+DROP TABLE IF EXISTS `university_completiondivision`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `university_completiondivision` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(10) NOT NULL,
+  `group_name` varchar(10) NOT NULL,
+  `university_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `university_completio_university_id_3d6bed17_fk_universit` (`university_id`),
+  CONSTRAINT `university_completio_university_id_3d6bed17_fk_universit` FOREIGN KEY (`university_id`) REFERENCES `university_university` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `university_completiondivision`
+--
+
+LOCK TABLES `university_completiondivision` WRITE;
+/*!40000 ALTER TABLE `university_completiondivision` DISABLE KEYS */;
+INSERT INTO `university_completiondivision` VALUES (1,'전공필수','전공',1),(2,'전공선택','전공',1),(3,'중핵필수','교양',1);
+/*!40000 ALTER TABLE `university_completiondivision` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `university_department`
+--
+
+DROP TABLE IF EXISTS `university_department`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `university_department` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `college_name` varchar(20) NOT NULL,
+  `community_id` int(11) DEFAULT NULL,
+  `same_department_id` int(11) DEFAULT NULL,
+  `university_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `university_departmen_community_id_43c994ca_fk_universit` (`community_id`),
+  KEY `university_departmen_same_department_id_62b78a1e_fk_universit` (`same_department_id`),
+  KEY `university_departmen_university_id_5578fbc7_fk_universit` (`university_id`),
+  CONSTRAINT `university_departmen_community_id_43c994ca_fk_universit` FOREIGN KEY (`community_id`) REFERENCES `university_community` (`id`),
+  CONSTRAINT `university_departmen_same_department_id_62b78a1e_fk_universit` FOREIGN KEY (`same_department_id`) REFERENCES `university_department` (`id`),
+  CONSTRAINT `university_departmen_university_id_5578fbc7_fk_universit` FOREIGN KEY (`university_id`) REFERENCES `university_university` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `university_department`
+--
+
+LOCK TABLES `university_department` WRITE;
+/*!40000 ALTER TABLE `university_department` DISABLE KEYS */;
+INSERT INTO `university_department` VALUES (1,'컴퓨터공학과','소프트웨어융합대학',1,NULL,1),(2,'보안학과','소프트웨어융합대학',1,NULL,1);
+/*!40000 ALTER TABLE `university_department` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `university_track`
+--
+
+DROP TABLE IF EXISTS `university_track`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `university_track` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `university_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `university_track_university_id_4ddaf932_fk_universit` (`university_id`),
+  CONSTRAINT `university_track_university_id_4ddaf932_fk_universit` FOREIGN KEY (`university_id`) REFERENCES `university_university` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `university_track`
+--
+
+LOCK TABLES `university_track` WRITE;
+/*!40000 ALTER TABLE `university_track` DISABLE KEYS */;
+/*!40000 ALTER TABLE `university_track` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `university_university`
+--
+
+DROP TABLE IF EXISTS `university_university`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `university_university` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) NOT NULL,
+  `maximum_credit` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `university_university`
+--
+
+LOCK TABLES `university_university` WRITE;
+/*!40000 ALTER TABLE `university_university` DISABLE KEYS */;
+INSERT INTO `university_university` VALUES (1,'세종대학교',4.5);
+/*!40000 ALTER TABLE `university_university` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2019-07-16 15:56:01
