@@ -4,8 +4,9 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router = DefaultRouter()
-router.register(r'department', views.APIDepartmentModelViewset)
+router.register(r'department', views.DepartmentViewset)
 router.register(r'university', views.UniversityGradeViewset)
+router.register(r'community', views.CommunityViewset)
 
 urlpatterns = [
     #대학 CRU

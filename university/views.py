@@ -1,14 +1,14 @@
 from django.shortcuts import render, reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
 from student.models import StudentInfo
 from student.mixin import DefaultMixin, StaffRequiredMixin
 from .models import University, CompletionDivision, Area, Track, \
     Department, Community
-from .serializers import DepartmentSerializer, UniversitySerializer
+from .serializers import DepartmentSerializer, UniversitySerializer, CommunitySerilaizer
 from .forms import UniversityForm, DepartmentForm
 
 # Create your views here.
@@ -154,7 +154,7 @@ api
 
 '''
 
-class APIDepartmentModelViewset(ReadOnlyModelViewSet):
+class DepartmentViewset(ReadOnlyModelViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
 
@@ -166,3 +166,7 @@ class UniversityGradeViewset(ReadOnlyModelViewSet):
     queryset = University.objects.all()
     serializer_class = UniversitySerializer
     permission_classes = (IsAuthenticated, )
+
+class CommunityViewset(ModelViewSet):
+    queryset = Community.objects.all()
+    serializer_class = CommunitySerilaizer

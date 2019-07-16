@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Department, CompletionDivision, Area, Track, University
+from .models import Department, CompletionDivision, Area, Track, University, Community
 
 class UniversitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,4 +25,9 @@ class AreaSerializer(serializers.ModelSerializer):
 class TrackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Track
+        fields = ('__all__')
+
+class CommunitySerilaizer(serializers.ModelSerializer):
+    class Meta:
+        model = Community
         fields = ('__all__')
