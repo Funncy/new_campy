@@ -1,9 +1,13 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView, ListView, CreateView, UpdateView
+from django.shortcuts import render, reverse
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView
+from django.http import HttpResponseRedirect
 
 from student.mixin import LoginRequiredMixin, DefaultMixin, StaffRequiredMixin
 from university.models import University
+from university.mixin import UniversityMixin
+from student.models import StudentInfo
 from .models import SubjectGroup, RuleGeneral, RuleSpecific
+from .forms import SubjectGroupForm
 # Create your views here.
 
 '''
@@ -22,24 +26,81 @@ class GraduationDiagnosisTV(DefaultMixin, LoginRequiredMixin, TemplateView):
 '''
 졸업진단을 위한 과목그룹 UI
 '''
-class SubjectGroupLV(DefaultMixin, StaffRequiredMixin, ListView):
+class SubjectGroupLV(DefaultMixin, StaffRequiredMixin, UniversityMixin, ListView):
     model = SubjectGroup
     template_name = 'subject_group_list.html'
     active = 'subjectGroupActive'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return SubjectGroup.objects.filter(university=self.kwargs['university'])
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_university'] = self.kwargs['university']
+        return context
 
 class SubjectGroupCV(DefaultMixin, StaffRequiredMixin, CreateView):
     model = SubjectGroup
     template_name = 'subject_group_form.html'
-    fields = ('completion_divisions', 'name')
+    form_class = SubjectGroupForm
     active = 'subjectGroupActive'
-    success_url = ''
+
+    # Form에 대학 정보 넣어주기 위함
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs['university'] = StudentInfo.objects.get(user_id=self.request.user.id).university_id
+        return kwargs
+
+    # 저장할때 대학 정보 추가
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        # 대학정보 추가
+        self.object.university_id = self.kwargs['university']
+        self.object.save()
+        # Many To Many Fields Save
+        form.save_m2m()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('subject_group_list', args=(self.object.university_id, ))
 
 class SubjectGroupUV(DefaultMixin, StaffRequiredMixin, UpdateView):
     model = SubjectGroup
     template_name = 'subject_group_form.html'
-    fields = ('completion_divisions', 'name')
+    form_class = SubjectGroupForm
     active = 'subjectGroupActive'
-    success_url = ''
+
+    # Form에 대학 정보 넣어주기 위함
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs['university'] = StudentInfo.objects.get(user_id=self.request.user.id).university_id
+        return kwargs
+
+    # 저장할때 대학 정보 추가
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        # 대학정보 추가
+        self.object.university_id = self.kwargs['university']
+        self.object.save()
+        # Many To Many Fields Save
+        form.save_m2m()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('subject_group_list', args=(self.object.university_id, ))
+
+class SubjectGroupDV(DefaultMixin, StaffRequiredMixin, DeleteView):
+    model = SubjectGroup
+
+    # get 막기 ( API처럼 사용 )
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('subject_group_list', args=(self.object.university_id,))
 
 '''
 졸업진단을 위한 룰 UI

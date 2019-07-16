@@ -12,6 +12,8 @@ urlpatterns = [
          views.SubjectGroupCV.as_view(), name='subject_group_add'),
     path('subject/group/<int:university>/<int:pk>/update/',
          views.SubjectGroupUV.as_view(), name='subject_group_update'),
+    path('subject/group/<int:university>/<int:pk>/delete/',
+         views.SubjectGroupDV.as_view(), name='subject_group_delete'),
 
     #졸업진단을 위한 룰 UI
     path('rule/university/', views.RuleUniversityLV.as_view(),

@@ -1,12 +1,14 @@
 from django.db import models
-from university.models import CompletionDivision, Track
+from university.models import CompletionDivision, Track, University
 
 # Create your models here.
 class SubjectGroup(models.Model):
-    completion_divisions = models.ManyToManyField(CompletionDivision, verbose_name='이수구분들')
+    university = models.ForeignKey(University, verbose_name='대학', on_delete=models.CASCADE)
     name = models.CharField(verbose_name='그룹명', max_length=20)
+    completion_divisions = models.ManyToManyField(CompletionDivision, verbose_name='이수구분들')
 
 class RuleGeneral(models.Model):
+    university = models.ForeignKey(University, verbose_name='대학', on_delete=models.CASCADE)
     name = models.CharField(verbose_name='졸업요건명', max_length=20)
     track = models.ForeignKey(Track, verbose_name='트랙', on_delete=models.CASCADE)
     type = models.CharField(verbose_name='졸업요건타입', max_length=20)
@@ -14,6 +16,7 @@ class RuleGeneral(models.Model):
     subject_group = models.ForeignKey(SubjectGroup, verbose_name='과목그룹', on_delete=models.CASCADE)
 
 class RuleSpecific(models.Model):
+    university = models.ForeignKey(University, verbose_name='대학', on_delete=models.CASCADE)
     name = models.CharField(verbose_name='졸업요건명', max_length=20)
     track = models.ForeignKey(Track, verbose_name='트랙', on_delete=models.CASCADE)
     type = models.CharField(verbose_name='졸업요건타입', max_length=20)

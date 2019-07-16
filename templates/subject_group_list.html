@@ -23,9 +23,16 @@
                 <div class="col-md-12">
                     <div class="form-group col-md-8">
                         <label>대학교</label>
-                        <select class="form-control select2"></select>
+                        <form id="search_form" method="get" action="">{% csrf_token %}
+                        <select id="search_select" onchange="form_submit()" class="form-control select2">
+                            {% for university in university_list %}
+                                <option value="{{ university.id }}"
+                                        {% if university.id == current_university %}selected{% endif %}>{{ university.name }}</option>
+                            {% endfor %}
+                        </select>
+                        </form>
                     </div>
-                    <button class="btn btn-primary col-md-4" style="margin-top:24px">생성</button>
+                    <a href="{% url 'subject_group_add' university=current_university %}"><button class="btn btn-primary col-md-4" style="margin-top:24px">생성</button></a>
                 </div>
                 <div class="col-md-12">
                     <table class="table table-bordered table-striped table-hover text-center">
@@ -37,14 +44,18 @@
                             </tr>
                         </thead>
                         <tbody>
+                        {% for subjectgroup in subjectgroup_list %}
                             <tr>
-                                <td></td>
-                                <td></td>
+                                <td>{{ subjectgroup.name }}</td>
+                                <td>{% for division in subjectgroup.completion_divisions.all %}[{{ division.name }}]{% endfor %}</td>
                                 <td>
-                                    <button class="btn btn-warning btn-xs">수정</button>
-                                    <button class="btn btn-danger btn-xs">삭제</button>
+                                    <a href="{% url 'subject_group_update' university=current_university pk=subjectgroup.id %}">
+                                        <button class="btn btn-warning btn-xs">수정</button></a>
+                                    <form onsubmit="submitResult({{ subjectgroup.name }})" class="btn btn-xs" method="post" action="{% url 'subject_group_delete' university=current_university pk=subjectgroup.id %}">{% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-xs">삭제</button></form>
                                 </td>
                             </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -65,5 +76,23 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+<script>
+
+    function submitResult(name){
+        if( confirm(name+"을 정말 삭제하시겠습니까?")==false ){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    function form_submit(){
+        var action = "/graduation/subject/group/"
+        action += $('#search_select').val()+'/'
+        $('#search_form').attr('action', action)
+        $('#search_form').submit()
+    }
+
+</script>
 
 {% include "include/footer.html" %}

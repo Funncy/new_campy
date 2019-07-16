@@ -9,7 +9,7 @@ from .forms import StudentForm
 from .models import StudentAddedMajor, StudentInfo
 # Create your views here.
 
-class JoinCV(StudentInfoMixin, ActiveMixin, LoginRequiredMixin, UniversityMixin, CreateView):
+class JoinCV(StudentInfoMixin, ActiveMixin, LoginRequiredMixin, CreateView):
     model = StudentInfo
     template_name = 'join.html'
     success_url = '/'

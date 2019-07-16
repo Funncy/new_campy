@@ -9,5 +9,5 @@ from .models import University
 class UniversityMixin(object):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['university'] = University.objects.all()
+        context['university_list'] = University.objects.all()
         return context
