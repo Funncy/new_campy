@@ -21,15 +21,18 @@ urlpatterns = [
 
     path('rule/university/general/<int:university>/<int:year>/<int:track>/',
          views.RuleGeneralLV.as_view(), name='rule_general_list'),
-    path('rule/university/general/<int:university>/add/',
+    path('rule/university/general/<int:university>/<int:year>/add/',
          views.RuleGeneralCV.as_view(), name='rule_general_add'),
-    path('rule/university/general/<int:university>/<int:pk>/update/',
+    path('rule/university/general/<int:university>/<int:year>/<int:pk>/update/',
          views.RuleGeneralUV.as_view(), name='rule_general_update'),
+    path('rule/university/general/<int:university>/<int:year>/<int:pk>/delete/',
+         views.RuleGeneralDV.as_view(), name='rule_general_delete'),
+
 
     path('rule/university/specific/<int:university>/<int:year>/<int:track>/',
          views.RuleSpecificLV.as_view(), name='rule_specific_list'),
-    path('rule/university/specific/<int:university>/add/',
+    path('rule/university/specific/<int:university>/<int:year>/add/',
          views.RuleSpecificCV.as_view(), name='rule_specific_add'),
-    path('rule/university/specific/<int:university>/<int:pk>/update/',
+    path('rule/university/specific/<int:university>/<int:year>/<int:pk>/update/',
          views.RuleSpecificUV.as_view(), name='rule_specific_update'),
 ]

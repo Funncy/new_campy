@@ -29,13 +29,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                        {% for university in university_list %}
                             <tr>
-                                <td></td>
+                                <td>{{ university.name }}</td>
                                 <td>
-                                    <button class="btn btn-primary btn-xs">일반 졸업요건</button><br>
-                                    <button class="btn btn-warning btn-xs">세부 졸업요건</button>
+                                    <a href="{% url 'rule_general_list' university=university.id year=0 track=1 %}">
+                                        <button class="btn btn-primary btn-xs">일반 졸업요건</button></a><br>
+                                    <a href="{% url 'rule_specific_list' university=university.id year=0 track=1 %}">
+                                        <button class="btn btn-warning btn-xs">세부 졸업요건</button></a>
                                 </td>
                             </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
             </div>

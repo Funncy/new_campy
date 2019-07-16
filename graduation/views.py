@@ -3,11 +3,11 @@ from django.views.generic import TemplateView, ListView, CreateView, UpdateView,
 from django.http import HttpResponseRedirect
 
 from student.mixin import LoginRequiredMixin, DefaultMixin, StaffRequiredMixin
-from university.models import University
+from university.models import University, Track
 from university.mixin import UniversityMixin
 from student.models import StudentInfo
 from .models import SubjectGroup, RuleGeneral, RuleSpecific
-from .forms import SubjectGroupForm
+from .forms import SubjectGroupForm, RuleGeneralForm
 # Create your views here.
 
 '''
@@ -52,6 +52,12 @@ class SubjectGroupCV(DefaultMixin, StaffRequiredMixin, CreateView):
         kwargs['university'] = StudentInfo.objects.get(user_id=self.request.user.id).university_id
         return kwargs
 
+    # 화면에 대학정보 뿌려주기 위함
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_university'] = University.objects.get(pk=self.kwargs['university'])
+        return context
+
     # 저장할때 대학 정보 추가
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -77,6 +83,12 @@ class SubjectGroupUV(DefaultMixin, StaffRequiredMixin, UpdateView):
         kwargs = super().get_form_kwargs(*args, **kwargs)
         kwargs['university'] = StudentInfo.objects.get(user_id=self.request.user.id).university_id
         return kwargs
+
+    # 화면에 대학정보 뿌려주기 위함
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_university'] = University.objects.get(pk=self.kwargs['university'])
+        return context
 
     # 저장할때 대학 정보 추가
     def form_valid(self, form):
@@ -115,17 +127,99 @@ class RuleGeneralLV(DefaultMixin, StaffRequiredMixin, ListView):
     template_name = 'rule_general_list.html'
     active = 'ruleActive'
 
+    def get_queryset(self):
+        return RuleGeneral.objects.filter(university=self.kwargs['university'],\
+                                          track=self.kwargs['track'],\
+                                          year=self.kwargs['year'])
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Track 추가 해당 대학에 맞춰서
+        context['tracks'] = Track.objects.filter(university_id=self.kwargs['university'])
+        # year 추가 '없음' 넣기
+        context['years'] = list()
+        context['years'].append(('0', '전체'))
+        context['years'] += [(x,x) for x in reversed(range(1950, 2021))]
+        # 대학,년도,트랙 정보 넣기 Search용
+        context['current_university'] = University.objects.get(pk=self.kwargs['university'])
+        context['current_year'] = self.kwargs['year']
+        context['current_track'] = self.kwargs['track']
+        return context
+
+
 class RuleGeneralCV(DefaultMixin, StaffRequiredMixin, CreateView):
     model = RuleGeneral
     template_name = 'rule_general_form.html'
     active = 'ruleActive'
-    fields = ('name', 'track', 'type', 'value', 'subject_group')
+    form_class = RuleGeneralForm
+
+    # Form에 대학 정보 넣어주기 위함
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs['university'] = StudentInfo.objects.get(user_id=self.request.user.id).university_id
+        return kwargs
+
+    # 화면에 대학정보 뿌려주기 위함
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_university'] = University.objects.get(pk=self.kwargs['university'])
+        context['current_year'] = self.kwargs['year']
+        return context
+
+    # 저장할때 대학,년도 정보 추가
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        # 대학정보 추가
+        self.object.university_id = self.kwargs['university']
+        self.object.year = self.kwargs['year']
+        self.object.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('rule_general_list', args=(self.object.university_id, self.object.year, 1 ))
 
 class RuleGeneralUV(DefaultMixin, StaffRequiredMixin, UpdateView):
     model = RuleGeneral
     template_name = 'rule_general_form.html'
     active = 'ruleActive'
-    fields = ('name', 'track', 'type', 'value', 'subject_group')
+    form_class = RuleGeneralForm
+
+    # Form에 대학 정보 넣어주기 위함
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs['university'] = StudentInfo.objects.get(user_id=self.request.user.id).university_id
+        return kwargs
+
+    # 화면에 대학정보 뿌려주기 위함
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_university'] = University.objects.get(pk=self.kwargs['university'])
+        context['current_year'] = self.kwargs['year']
+        return context
+
+    # 저장할때 대학,년도 정보 추가
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        # 대학정보 추가
+        self.object.university_id = self.kwargs['university']
+        self.object.year = self.kwargs['year']
+        self.object.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('rule_general_list', args=(self.object.university_id, self.object.year, 1))
+
+class RuleGeneralDV(DefaultMixin, StaffRequiredMixin, DeleteView):
+    model = RuleGeneral
+
+    # get 막기 ( API처럼 사용 )
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('rule_general_list', args=(self.object.university_id, self.object.year, 1))
 
 
 class RuleSpecificLV(DefaultMixin, StaffRequiredMixin, ListView):

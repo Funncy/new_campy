@@ -17,46 +17,67 @@
       <div class="col-md-12">
         <div class="box box-primary">
           <div class="box-header">
-            <h4>졸업요건 일반 - 대학명</h4>
+            <h4>졸업요건 일반 - {{ current_university.name }}</h4>
           </div>
           <div class="box-body">
             <div class="col-md-12">
                 <div class="row">
                     <div class="form-group col-md-4">
                         <label>입학년도</label>
-                        <select class="form-control select2"></select>
+                        <select id="search_year" class="form-control select2">
+                            {% for year in years %}
+                                <option value="{{ year.0 }}"
+                                {% if year.0 == current_year %}selected{% endif %}
+                                >{{ year.1 }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group col-md-4">
                         <label>이수트랙</label>
-                        <select class="form-control select2"></select>
+                        <select id="search_track" class="form-control select2">
+                            {% for track in tracks %}
+                                <option value="{{ track.id }}"
+                                {% if track.id == current_track %}selected{% endif %}
+                                >{{ track.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                    <button class="btn btn-primary col-md-4" style="margin-top:24px">조회</button>
+                    <form id="search_form" method="get" action="">{% csrf_token %}
+                    <button onclick="search_submit()" class="btn btn-primary col-md-4" style="margin-top:24px">조회</button>
+                    </form>
                 </div>
                 <table class="table table-bordered table-striped table-hover text-center">
                     <thead>
                       <tr>
                         <th>졸업요건 이름</th>
-                        <th>요건 종료</th>
+                        <th>요건 종류</th>
                         <th>요건 값</th>
                         <th style="width:100px">관리</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                    {% for rule in rulegeneral_list %}
+                        <tr>
+                        <td>{{ rule.name }}</td>
+                        <td>{{ rule.get_type_display }}</td>
+                        <td>{{ rule.value }}</td>
                         <td>
-                          <button class="btn btn-warning btn-xs">수정</button>
-                          <button class="btn btn-danger btn-xs">삭제</button>
+                          <a href="{% url 'rule_general_update' university=current_university.id year=current_year pk=rule.id %}">
+                              <button class="btn btn-warning btn-xs">수정</button></a>
+                          <form onsubmit="submitResult('{{ rule.name }}')" method="post" action="{% url 'rule_general_delete' university=current_university.id year=current_year pk=rule.id %}">
+                              {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-xs">삭제</button>
+                          </form>
                         </td>
                       </tr>
+                    {% endfor %}
                       <tr>
                           <td></td>
                           <td></td>
                           <td></td>
                           <td>
-                            <button class="btn btn-primary btn-xs">추가</button>
+                            <a href="{% url 'rule_general_add' university=current_university.id year=current_year %}">
+                                <button class="btn btn-primary btn-xs">추가</button></a>
                           </td>
                         </tr>
                     </tbody>
@@ -75,5 +96,25 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
+<script>
+
+    function submitResult(name){
+        if( confirm(name+"을 정말 삭제하시겠습니까?")==false ){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    function search_submit(){
+        var year = $('#search_year').val()
+        var track = $('#search_track').val()
+        var action = '/graduation/rule/university/general/1/'+year+'/'+track+'/'
+
+        $('#search_form').attr('action',action)
+        $('#search_form').submit()
+    }
+</script>
 
 {% include "include/footer.html" %}
