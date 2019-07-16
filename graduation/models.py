@@ -1,5 +1,5 @@
 from django.db import models
-from university.models import CompletionDivision, Track, University
+from university.models import CompletionDivision, Track, University, Department
 
 # Create your models here.
 class SubjectGroup(models.Model):
@@ -24,6 +24,7 @@ class RuleGeneral(models.Model):
 
 class RuleSpecific(models.Model):
     university = models.ForeignKey(University, verbose_name='대학', on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, verbose_name='학과', on_delete=models.CASCADE)
     name = models.CharField(verbose_name='졸업요건명', max_length=20)
     track = models.ForeignKey(Track, verbose_name='트랙', on_delete=models.CASCADE)
     year = models.SmallIntegerField(default=0)
