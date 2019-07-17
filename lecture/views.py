@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse
-from django.views.generic import ListView
+from django.views.generic import ListView, FormView
 from django.contrib.auth.decorators import login_required
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticated
@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from student.mixin import DefaultMixin, StaffRequiredMixin
 from .models import Lecture, Subject
 from .serializers import SubjectSerializer, LectureSerializer
+from .forms import UploadFileForm
 
 # Create your views here.
 
@@ -26,8 +27,13 @@ class LectureLV(DefaultMixin, StaffRequiredMixin, ListView):
 '''
  FILE UPLOAD 로직
 '''
+class LectureUploadFV(DefaultMixin, StaffRequiredMixin, FormView):
+    form_class = UploadFileForm
+    template_name = 'lecture_upload.html'
+    active = 'dataUploadActive'
+
 @login_required
-def LectureUploadFV(request):
+def LectureUploadFV2(request):
     if request.user.is_staff is False:
         return redirect(reverse('index'))
     context = {}
