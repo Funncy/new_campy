@@ -19,7 +19,7 @@ class University(models.Model):
 class CompletionDivision(models.Model):
     university = models.ForeignKey(University, verbose_name='대학', on_delete=models.CASCADE)
     name = models.CharField(verbose_name='영역이름', max_length=10)
-    group_name = models.CharField(verbose_name='그룹이름', max_length=10)
+    group_name = models.CharField(verbose_name='그룹이름', max_length=10, blank=True)
 
     def get_division_by_university(university_id):
         return CompletionDivision.objects.filter(university=university_id)
