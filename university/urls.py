@@ -7,6 +7,9 @@ router = DefaultRouter()
 router.register(r'department', views.DepartmentViewset)
 router.register(r'university', views.UniversityGradeViewset)
 router.register(r'community', views.CommunityViewset)
+router.register(r'division', views.DivisionViewset)
+router.register(r'area', views.AreaViewset)
+router.register(r'track', views.TrackViewset)
 
 urlpatterns = [
     #대학 CRU

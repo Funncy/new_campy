@@ -8,7 +8,8 @@ from student.models import StudentInfo
 from student.mixin import DefaultMixin, StaffRequiredMixin
 from .models import University, CompletionDivision, Area, Track, \
     Department, Community
-from .serializers import DepartmentSerializer, UniversitySerializer, CommunitySerilaizer
+from .serializers import DepartmentSerializer, UniversitySerializer, CommunitySerilaizer,\
+    CompletiondivisionSerializer, AreaSerializer, TrackSerializer
 from .forms import UniversityForm, DepartmentForm
 
 # Create your views here.
@@ -170,3 +171,27 @@ class UniversityGradeViewset(ReadOnlyModelViewSet):
 class CommunityViewset(ModelViewSet):
     queryset = Community.objects.all()
     serializer_class = CommunitySerilaizer
+
+class DivisionViewset(ModelViewSet):
+    queryset = CompletionDivision.objects.all()
+    serializer_class = CompletiondivisionSerializer
+
+    def get_queryset(self):
+        university = self.request.query_params.get('university')
+        return CompletionDivision.objects.filter(university=university)
+
+class AreaViewset(ModelViewSet):
+    queryset = Area.objects.all()
+    serializer_class = AreaSerializer
+
+    def get_queryset(self):
+        university = self.request.query_params.get('university')
+        return Area.objects.filter(university=university)
+
+class TrackViewset(ModelViewSet):
+    queryset = Track.objects.all()
+    serializer_class = TrackSerializer
+
+    def get_queryset(self):
+        university = self.request.query_params.get('university')
+        return Track.objects.filter(university=university)
