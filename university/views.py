@@ -176,22 +176,10 @@ class DivisionViewset(ModelViewSet):
     queryset = CompletionDivision.objects.all()
     serializer_class = CompletiondivisionSerializer
 
-    def get_queryset(self):
-        university = self.request.query_params.get('university')
-        return CompletionDivision.objects.filter(university=university)
-
 class AreaViewset(ModelViewSet):
     queryset = Area.objects.all()
     serializer_class = AreaSerializer
 
-    def get_queryset(self):
-        university = self.request.query_params.get('university')
-        return Area.objects.filter(university=university)
-
 class TrackViewset(ModelViewSet):
     queryset = Track.objects.all()
     serializer_class = TrackSerializer
-
-    def get_queryset(self):
-        university = self.request.query_params.get('university')
-        return Track.objects.filter(university=university)
