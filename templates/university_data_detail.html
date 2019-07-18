@@ -30,24 +30,7 @@
                                         <th class="col-md-2">관리</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {% for division in university.completiondivision_set.all %}
-                                        <tr>
-                                        <td>{{ division.name }}</td>
-                                        <td>{{ division.group_name }}</td>
-                                        <td>
-                                            <button class="btn btn-warning btn-xs">수정</button>
-                                            <button class="btn btn-danger btn-xs">삭제</button>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                            <button class="btn btn-primary btn-xs">추가</button>
-                                        </td>
-                                    </tr>
+                                <tbody id="division_table">
                                 </tbody>
                             </table>
                         </div>
@@ -59,22 +42,7 @@
                                         <th class="col-md-2">관리</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {% for area in university.area_set.all %}
-                                        <tr>
-                                        <td>{{ area.name }}</td>
-                                        <td>
-                                            <button class="btn btn-warning btn-xs">수정</button>
-                                            <button class="btn btn-danger btn-xs">삭제</button>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                    <tr>
-                                        <td></td>
-                                        <td>
-                                            <button class="btn btn-primary btn-xs">추가</button>
-                                        </td>
-                                    </tr>
+                                <tbody id="area_table">
                                 </tbody>
                             </table>
                         </div>
@@ -86,29 +54,14 @@
                                         <th class="col-md-2">관리</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                {% for track in university.track_set.all %}
-                                    <tr>
-                                        <td>{{ track.name }}</td>
-                                        <td>
-                                            <button class="btn btn-warning btn-xs">수정</button>
-                                            <button class="btn btn-danger btn-xs">삭제</button>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                    <tr>
-                                        <td></td>
-                                        <td>
-                                            <button class="btn btn-primary btn-xs">추가</button>
-                                        </td>
-                                    </tr>
+                                <tbody id="track_table">
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
                 </div>
-                <div class="box-footer"><button class="btn btn-primary pull-right">생성/수정하기</button></div>
+                <div class="box-footer"></div>
             </div>
         </div>
 
@@ -120,5 +73,584 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+<!--이수구분 추가 모달-->
+<div class="modal fade" id="division_add_modal" role="dialog" style="display: none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="header"><b>추가창</b></h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div id="add_division_id" style="visibility:hidden"></div>
+                    <label>이수구분명</label>
+                    <input class="form-control" id="add_division_name">
+                </div>
+                <div class="form-group">
+                    <div id="add_group_id" style="visibility:hidden"></div>
+                    <label>그룹명</label>
+                    <input class="form-control" id="add_group_name">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                      <button class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
+                      <button class="btn btn-primary pull-right" data-dismiss="modal" id="add_division">추가</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--이수구분 수정 모달-->
+<div class="modal fade" id="division_update_modal" role="dialog" style="display: none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="header"><b>수정창</b></h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div id="update_division_id" style="visibility:hidden"></div>
+                    <label>이수구분명</label>
+                    <input class="form-control" id="update_division_name">
+                </div>
+                <div class="form-group">
+                    <label>그룹명</label>
+                    <input class="form-control" id="update_group_name">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                      <button class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
+                      <button class="btn btn-warning pull-right" data-dismiss="modal" id="update_division">수정</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--이수구분 삭제 모달-->
+<div class="modal fade" id="division_delete_modal" role="dialog" style="display: none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="header"><b>삭제창</b></h4>
+            </div>
+            <div class="modal-body">
+                    <div class="form-group">
+                        <div id="delete_division_id" style="visibility:hidden"></div>
+                        <label>이수구분명</label>
+                        <div class="form-control" id="delete_division_name"></div>
+                    </div>
+                    <div class="form-group">
+                        <div id="delete_group_id" style="visibility:hidden"></div>
+                        <label>그룹명</label>
+                        <div class="form-control" id="delete_group_name"></div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                      <button class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
+                      <button class="btn btn-danger pull-right" data-dismiss="modal" id="delete_division">삭제</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--영역 추가 모달-->
+<div class="modal fade" id="area_add_modal" role="dialog" style="display: none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="header"><b>추가창</b></h4>
+            </div>
+            <div class="modal-body">
+                <div id="add_area_id" style="visibility:hidden"></div>
+                <label>영역명</label>
+                <input class="form-control" id="add_area_name">
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                      <button class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
+                      <button class="btn btn-primary pull-right" data-dismiss="modal" id="add_area">추가</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--영역 수정 모달-->
+<div class="modal fade" id="area_update_modal" role="dialog" style="display: none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="header"><b>수정창</b></h4>
+            </div>
+            <div class="modal-body">
+                <div id="update_area_id" style="visibility:hidden"></div>
+                <label>영역명</label>
+                <input class="form-control" id="update_area_name">
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                      <button class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
+                      <button class="btn btn-warning pull-right" data-dismiss="modal" id="update_area">수정</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--영역 삭제 모달-->
+<div class="modal fade" id="area_delete_modal" role="dialog" style="display: none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="header"><b>삭제창</b></h4>
+            </div>
+            <div class="modal-body">
+                <div id="delete_area_id" style="visibility:hidden"></div>
+                <label>영역명</label>
+                <div class="form-control" id="delete_area_name"></div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                      <button class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
+                      <button class="btn btn-danger pull-right" data-dismiss="modal" id="delete_area">삭제</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--트랙 추가 모달-->
+<div class="modal fade" id="track_add_modal" role="dialog" style="display: none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="header"><b>추가창</b></h4>
+            </div>
+            <div class="modal-body">
+                <div id="add_track_id" style="visibility:hidden"></div>
+                <label>트랙명</label>
+                <input class="form-control" id="add_track_name">
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                      <button class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
+                      <button class="btn btn-primary pull-right" data-dismiss="modal" id="add_track">추가</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--트랙 수정 모달-->
+<div class="modal fade" id="track_update_modal" role="dialog" style="display: none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="header"><b>수정창</b></h4>
+            </div>
+            <div class="modal-body">
+                <div id="update_track_id" style="visibility:hidden"></div>
+                <label>트랙명</label>
+                <input class="form-control" id="update_track_name">
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                      <button class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
+                      <button class="btn btn-warning pull-right" data-dismiss="modal" id="update_track">수정</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--트랙 삭제 모달-->
+<div class="modal fade" id="track_delete_modal" role="dialog" style="display: none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="header"><b>삭제창</b></h4>
+            </div>
+            <div class="modal-body">
+                <div id="delete_track_id" style="visibility:hidden"></div>
+                <label>트랙명</label>
+                <div class="form-control" id="delete_track_name"></div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                      <button class="btn btn-default pull-left" data-dismiss="modal">닫기</button>
+                      <button class="btn btn-danger pull-right" data-dismiss="modal" id="delete_track">삭제</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    //
+    $(document).ready(function(){
+        reload_area()
+        reload_division()
+        reload_track()
+    })
+/*
+    //이수구분 추가
+        $('#add_division').click(function(){
+        $.ajax({
+            url: '',
+            type: 'post',
+            data: {
+              'division_name' : $("#add_division_name").text(),
+              'group_name' : $("#add_group_name").text(),
+            },
+            success: function (result) {
+              
+            },
+            error:function(request,status,error){
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+            })
+    })
+    //이수구분 수정
+    $('#update_division').click(function(){
+        $.ajax({
+            url: '',
+            type: 'patch',
+            data: {
+              'division_name' : $("#update_division_name").text(),
+              'group_name' : $("#update_group_name").text(),
+            },
+            success: function (result) {
+              
+            },
+            error:function(request,status,error){
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+            })
+    })
+    //이수구분 삭제
+    $('#delete_division').click(function(){
+        $.ajax({
+            url: '',
+            type: 'delete',
+            data: {},
+            success: function (result) {
+              
+            },
+            error:function(request,status,error){
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+            })
+    })*/
+
+
+
+
+
+    function reload_division(){
+      //division ajax
+    $.ajax({
+        url: '/university/api/division/',
+        type: 'get',
+        data: {
+            'university': '{{ university.id }}'
+            },
+        success: function (result) {
+          
+          //엠프티
+          $('#division_table').empty()
+          
+          for(var key in result){
+              $('#division_table').append("<tr><td>"+result[key].name+"</td><td>"+result[key].group_name+"</td><td><button class='btn btn-warning btn-xs' onclick=\"update_division_modal('"+result[key].id+"','"+result[key].name+"','"+result[key].group_name+"')\" data-toggle='modal' data-target='#division_update_modal'>수정</button><button class='btn btn-danger btn-xs' onclick=\"delete_division_modal('"+result[key].id+"','"+result[key].name+"','"+result[key].group_name+"')\" data-toggle='modal' data-target='#division_delete_modal'>삭제</button></td></tr>")
+           }
+
+          //추가 버튼 있는 한줄 
+          $('#division_table').append("<tr><td></td><td></td><td><button class='btn btn-primary btn-xs' data-toggle='modal' onclick=add_division_modal() data-target='#division_add_modal'>추가</button></td></tr>")
+        },
+        error:function(request,status,error){
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+        })
+    }
+
+    function reload_area(){
+    //area ajax
+    $.ajax({
+        url: '/university/api/area/',
+        type: 'get',
+        data: {'university':'{{ university.id }}'},
+        success: function (result) {
+            
+          //엠프티
+          $('#area_table').empty()
+          
+          for(var key in result){
+              $('#area_table').append("<tr><td>"+result[key].name+"</td><td><button class='btn btn-warning btn-xs' onclick=\"update_area_modal('"+result[key].id+"','"+result[key].name+"')\" data-toggle='modal' data-target='#area_update_modal'>수정</button><button class='btn btn-danger btn-xs' onclick=\"delete_area_modal('"+result[key].id+"','"+result[key].name+"')\" data-toggle='modal' data-target='#area_delete_modal'>삭제</button></td></tr>")
+           }
+          
+          //추가 버튼 있는 한줄 
+          $('#area_table').append("<tr><td></td><td><button class='btn btn-primary btn-xs' data-toggle='modal' onclick=add_modal() data-target='#area_add_modal'>추가</button></td></tr>")
+        },
+        error:function(request,status,error){
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+        })
+    }
+
+    function reload_track(){
+    //track ajax
+    $.ajax({
+        url: '/university/api/track/',
+        type: 'get',
+        data: {'university':'{{ university.id }}'},
+        success: function (result) {
+            
+          //엠프티
+          $('#track_table').empty()
+          
+          for(var key in result){
+              $('#track_table').append("<tr><td>"+result[key].name+"</td><td><button class='btn btn-warning btn-xs' onclick=\"update_track_modal('"+result[key].id+"','"+result[key].name+"')\" data-toggle='modal' data-target='#track_update_modal'>수정</button><button class='btn btn-danger btn-xs' onclick=\"delete_track_modal('"+result[key].id+"','"+result[key].name+"')\" data-toggle='modal' data-target='#track_delete_modal'>삭제</button></td></tr>")
+           }
+          
+          //추가 버튼 있는 한줄 
+          $('#track_table').append("<tr><td></td><td><button class='btn btn-primary btn-xs' data-toggle='modal' onclick=add_track_modal() data-target='#track_add_modal'>추가</button></td></tr>")
+        },
+        error:function(request,status,error){
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+        })
+    }
+
+    //이수구분 수정버튼 눌렀을때
+    $('#update_division').click(function(){
+        $.ajax({
+        url: '/university/api/division/'+$('#update_division_id').text()+'/',
+        type: 'patch',
+        data: {
+            'name':$('#update_division_name').val(),
+            'group_name':$('#update_group_name').val()
+            },
+        success: function (result) {
+          reload_division();
+        },
+        error:function(request,status,error){
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+        })
+    })
+        
+    //이수구분 삭제버튼 눌렀을때
+    $('#delete_division').click(function(){
+        $.ajax({
+        url: '/university/api/division/'+$('#delete_division_id').text()+'/',
+        type: 'delete',
+        data: {},
+        success: function (result) {
+          reload_division();
+        },
+        error:function(request,status,error){
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+        })
+    })
+
+    //이수구분 추가버튼 눌렀을때
+    $('#add_division').click(function(){
+        $.ajax({
+        url: '/university/api/division/',
+        type: 'post',
+        data: {
+            'university':'{{ university.id }}',
+            'name': $('#add_division_name').val(),  
+            'group_name': $('#add_group_name').val(),
+            },
+        success: function (result) {
+          reload_division();
+        },
+        error:function(request,status,error){
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+        })
+    })
+
+
+    //영역 수정버튼 눌렀을때
+    $('#update_area').click(function(){
+        $.ajax({
+        url: '/university/api/area/'+$('#update_area_id').text()+'/',
+        type: 'patch',
+        data: {'name':$('#update_area_name').val()},
+        success: function (result) {
+          reload_area();
+        },
+        error:function(request,status,error){
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+        })
+    })
+        
+    //영역 삭제버튼 눌렀을때
+    $('#delete_area').click(function(){
+        $.ajax({
+        url: '/university/api/area/'+$('#delete_area_id').text()+'/',
+        type: 'delete',
+        data: {},
+        success: function (result) {
+          reload_area();
+        },
+        error:function(request,status,error){
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+        })
+    })
+
+    //영역 추가버튼 눌렀을때
+    $('#add_area').click(function(){
+        $.ajax({
+        url: '/university/api/area/',
+        type: 'post',
+        data: {
+            'university':'{{ university.id }}',
+            'name': $('#add_area_name').val()},
+        success: function (result) {
+          reload_area();
+        },
+        error:function(request,status,error){
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+        })
+    })
+
+    //트랙 수정버튼 눌렀을때
+    $('#update_track').click(function(){
+        $.ajax({
+        url: '/university/api/track/'+$('#update_track_id').text()+'/',
+        type: 'patch',
+        data: {
+            'name':$('#update_track_name').val()
+            },
+        success: function (result) {
+          reload_track();
+        },
+        error:function(request,status,error){
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+        })
+    })
+        
+    //트랙 삭제버튼 눌렀을때
+    $('#delete_track').click(function(){
+        $.ajax({
+        url: '/university/api/track/'+$('#delete_track_id').text()+'/',
+        type: 'delete',
+        data: {},
+        success: function (result) {
+          reload_track();
+        },
+        error:function(request,status,error){
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+        })
+    })
+
+    //트랙 추가버튼 눌렀을때
+    $('#add_track').click(function(){
+        $.ajax({
+        url: '/university/api/track/',
+        type: 'post',
+        data: {'university':'{{ university.id }}',
+                'name': $('#add_track_name').val()},
+        success: function (result) {
+          reload_track();
+        },
+        error:function(request,status,error){
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+        })
+    })
+    
+
+    //이수구분 삭제 모달 데이터 입력
+    function delete_division_modal(division_id,division_name,group_name){
+        $('#delete_division_id').text(division_id)
+        $('#delete_division_name').text(division_name)
+        $('#delete_group_name').text(group_name)
+    }
+
+    //이수구분 수정 모달 데이터 입력
+    function update_division_modal(division_id,division_name,group_name){
+        $('#update_division_id').text(division_id)
+        $('#update_division_name').val(division_name)
+        $('#update_group_name').val(group_name)
+    }
+    
+    //이수구분 추가 모달 데이터 입력
+    function add_division_modal(division_id,division_name,group_name){
+        $('#add_division_id').text(division_id)
+        $('#add_division_name').val(division_name)
+        $('#add_group_name').val(group_name)
+    }
+
+    //영역 삭제 모달 데이터 입력
+    function delete_area_modal(id,name){
+        $('#delete_area_id').text(id)
+        $('#delete_area_name').text(name)
+    }
+
+    //영역 수정 모달 데이터 입력
+    function update_area_modal(id,name){
+        $('#update_area_id').text(id)
+        $('#update_area_name').val(name)
+    }
+    
+    //영역 추가 모달 데이터 입력
+    function add_area_modal(id,name){
+        $('#add_area_id').text(id)
+        $('#add_area_name').val(name)
+    }
+
+    //트랙 삭제 모달 데이터 입력
+    function delete_track_modal(id,name){
+        $('#delete_track_id').text(id)
+        $('#delete_track_name').text(name)
+    }
+
+    //트랙 수정 모달 데이터 입력
+    function update_track_modal(id,name){
+        $('#update_track_id').text(id)
+        $('#update_track_name').val(name)
+    }
+    
+    //트랙 추가 모달 데이터 입력
+    function add_track_modal(id,name){
+        $('#add_track_id').text(id)
+        $('#add_track_name').val(name)
+    }
+
+</script>
 
 {% include "include/footer.html" %}
