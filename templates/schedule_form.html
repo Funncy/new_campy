@@ -60,26 +60,33 @@
                         <hr>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group" style="height:400px">
+                                <div class="form-group">
                                     <label class="table-head">검색 결과</label>
                                     <table class="table table-bordered table-striped table-hover text-center" name="schedule">
                                             <thead>
                                                 <tr>
-                                                    <th style="width: 50px">빈칸</th>
-                                                    <th style="width: 80px">교수</th>
-                                                    <th>과목</th>
-                                                    <th style="width: 80px">학년</th>
-                                                    <th style="width: 80px">학점</th>
+                                                    <th style="width: 25%;">과목</th>
+                                                    <th style="width: 9%">교수</th>
+                                                    <th>강의 시간</th>
+                                                    <th style="width: 12%">이수<br>구분</th>
+                                                    <th style="width: 10%">학년</th>
+                                                    <th style="width: 10%">학점</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                            {% for lecture in lecture_list %}
+                                                <tr onclick="set_data('{{ lecture.subject.name }}')">
+                                                    <td>{{ lecture.subject.name }}</td>
+                                                    <td>{{ lecture.professor }}</td>
+                                                    <td>{% for week in lecture.lecturetime_set.all %}
+                                                        <!--{{ week.start_time|time:'H:i'}}-->
+                                                    {{ week.week }} {{ week.start_time}}~{{ week.end_time }}<br>
+                                                    {% endfor %}</td>
+                                                    <td>{{ lecture.subject.completion_division.name }}</td>
+                                                    <td>{{ lecture.class_year }}</td>
+                                                    <td>{{ lecture.subject.credit }}</td>
                                                 </tr>
+                                            {% endfor %}
                                             </tbody>
                                     </table>
                                 </div>
@@ -87,7 +94,29 @@
                         </div>
                     </div>
                     <div class="box-footer">
-
+                    {% if lecture_list.has_other_pages %}
+                         <nav style="text-align: center">
+                        <ul class="pagination">
+                        {% if lecture_list.has_previous %}
+                            <li><a href="?page={{ lecture_list.previous_page_number }}">&laquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in page_range %}
+                                {% if lecture_list.number == i %}
+                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if lecture_list.has_next %}
+                            <li><a href="?page={{ lecture_list.next_page_number }}">&raquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                        </ul>
+                         </nav>
+                    {% endif %}
                     </div>
                 </div>
             </div>
@@ -607,5 +636,10 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+<script>
+    function set_data(name){
+        alert(name)
+    }
+</script>
 
 {% include "include/footer.html" %}
