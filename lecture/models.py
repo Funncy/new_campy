@@ -16,13 +16,30 @@ class Subject(models.Model):
         return Subject.objects.filter(university=student_info.university)
 
 class Lecture(models.Model):
-    code = models.CharField(verbose_name='강의코드', max_length=20)
+    SEMESTER_CHOICES = (
+        (10, '1학기'),
+        (20, '2학기'),
+        (11, '여름학기'),
+        (21, '겨울학기'),
+    )
     subject = models.ForeignKey(Subject, verbose_name='교과목', on_delete=models.CASCADE)
     professor = models.CharField(verbose_name='교수님', max_length=10)
     class_room = models.CharField(verbose_name='강의실', max_length=15)
-    week = models.CharField(verbose_name='요일', max_length=5)
+    opened_year = models.SmallIntegerField(verbose_name='개설년도')
+    opened_semester = models.SmallIntegerField(verbose_name='개설학기', choices=SEMESTER_CHOICES, default=0)
+    opened_college = models.CharField(verbose_name='개설단', max_length=50)
+    opened_department = models.CharField(verbose_name='개설학과', max_length=50)
+
+class LectureTime(models.Model):
+    WEEK_CHOICES = (
+        ('mon', '월'),
+        ('tue', '화'),
+        ('wed', '수'),
+        ('thu', '목'),
+        ('fir', '금'),
+        ('sat', '토'),
+    )
+    lecture = models.ForeignKey(Lecture, verbose_name='강의', on_delete=models.CASCADE)
+    week = models.CharField(verbose_name='요일', choices=WEEK_CHOICES, max_length=10)
     start_time = models.TimeField(verbose_name='시작시간')
     end_time = models.TimeField(verbose_name='끝나는시간')
-    opened_year = models.SmallIntegerField(verbose_name='개설년도')
-    opened_semester = models.SmallIntegerField(verbose_name='개설학기')
-    opened_department = models.ForeignKey(Department, verbose_name='개설학과', on_delete=models.CASCADE)
