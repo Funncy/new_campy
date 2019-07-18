@@ -18,7 +18,8 @@ class University(models.Model):
 
 class CompletionDivision(models.Model):
     university = models.ForeignKey(University, verbose_name='대학', on_delete=models.CASCADE)
-    name = models.CharField(verbose_name='영역이름', max_length=10)
+    name = models.CharField(verbose_name='이수구분이름', max_length=10)
+    abbreviation = models.CharField(verbose_name='약어', max_length=10, blank=True)
     group_name = models.CharField(verbose_name='그룹이름', max_length=10, blank=True)
 
     def get_division_by_university(university_id):
@@ -27,6 +28,7 @@ class CompletionDivision(models.Model):
 class Area(models.Model):
     university = models.ForeignKey(University, verbose_name='대학', on_delete=models.CASCADE)
     name = models.CharField(verbose_name='영역이름', max_length=10)
+    abbreviation = models.CharField(verbose_name='약어', max_length=10, blank=True)
 
     def get_area_by_university(university_id):
         return Area.objects.filter(university=university_id)
