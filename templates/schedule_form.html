@@ -78,7 +78,7 @@
                                                 <tr onclick="set_data('{{ lecture.subject.name }}')">
                                                     <td>{{ lecture.subject.name }}</td>
                                                     <td>{{ lecture.professor }}</td>
-                                                    <td>{% for week in lecture.lecturetime_set.all %}
+                                                    <td>{% for week in lecture.times.all %}
                                                         <!--{{ week.start_time|time:'H:i'}}-->
                                                     {{ week.week }} {{ week.start_time}}~{{ week.end_time }}<br>
                                                     {% endfor %}</td>
