@@ -21,23 +21,52 @@
           </div>
           <div class="box-body">
             <div class="col-md-12">
+            <form id="search_form" method="get" action="">{% csrf_token %}</form>
                     <div class="form-group col-md-2">
                         <label>학교</label>
-                        <select class="form-control select2"></select>
+                        <select id="search_university" class="form-control select2" onchange="form_submit()">
+                            {% for university in university_list %}
+                                <option value="{{ university.id }}"
+                                {% if university.id == current_university %}
+                                    selected
+                                {%endif%}
+                                >{{ university.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group col-md-2">
                         <label>이수구분</label>
-                        <select class="form-control select2"></select>
+                        <select id="search_division" class="form-control select2" onchange="form_submit()">
+                            <option value="0">전체</option>
+                            {% for division in division_list %}
+                                <option value="{{ division.id }}"
+                                {% if division.id == current_division %}
+                                    selected
+                                {%endif%}
+                                >{{ division.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group col-md-2">
                         <label>영역</label>
-                        <select class="form-control select2"></select>
+                        <select id="search_area" class="form-control select2" onchange="form_submit()">
+                            <option value="0">전체</option>
+                            {% for area in area_list %}
+                                <option value="{{ area.id }}"
+                                {% if area.id == current_area %}
+                                    selected
+                                {%endif%}
+                                >{{ area.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
+                    <form action="" method="get">{% csrf_token %}
                     <div class="form-group col-md-4">
                         <label>과목명</label>
-                        <input type="text" class="form-control">
+                        <input name="search_name" type="text" class="form-control" value="{{ search_name }}">
                     </div>
-                    <button class="btn btn-primary col-md-2" style="margin-top:24px">검색</button>
+                    <button type="submit" class="btn btn-primary col-md-2" style="margin-top:24px">검색</button>
+                    </form>
 
 
                 <div class="row">
@@ -54,18 +83,20 @@
                                 </tr>
                             </thead>
                             <tbody>
+                            {% for subjcet in subject_list %}
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{ subjcet.name }}</td>
+                                    <td>{{ subjcet.university.name }}</td>
+                                    <td>{{ subjcet.completion_division.name }}</td>
+                                    <td>{{ subjcet.area.name }}</td>
+                                    <td>{{ subjcet.credit }}</td>
                                     <td>
                                         <button class="btn btn-warning btn-xs">수정</button>
                                         <button class="btn btn-danger btn-xs">삭제</button>
                                         <button class="btn btn-primary btn-xs">강의</button>
                                     </td>
                                 </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -73,6 +104,45 @@
             </div>
           </div>
           <div class="box-footer">
+              {% if is_paginated %}
+                <nav style="text-align: center">
+                    <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a href="?page={{ page_obj.previous_page_number }}&search_name={{ search_name }}">
+                                <span>Prev</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="disabled">
+                            <a href="#">
+                                <span>Previous</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for page in page_range %}
+                        <li {% if page == page_obj.number %}class="active"{% endif %}>
+                            <a href="?page={{ page }}&search_name={{ search_name }}">{{ page }}</a>
+                        </li>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a href="?page={{ page_obj.next_page_number }}&search_name={{ search_name }}">
+                                <span>Next</span>
+                            </a>
+                        </li>
+                    {% else %}
+                    <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+                        <a href="#">
+                            <span>Next</span>
+                        </a>
+                    </li>
+            {% endif %}
+            </ul>
+            </nav>
+{% endif %}
           </div>
         </div>
       </div>
@@ -85,5 +155,14 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
+<script>
+    function form_submit(){
+        var action = "/lecture/subject/"
+        action += $('#search_university').val()+'/'+$('#search_division').val()+'/'+$('#search_area').val()+'/'
+        $('#search_form').attr('action', action)
+        $('#search_form').submit()
+    }
+</script>
 
 {% include "include/footer.html" %}

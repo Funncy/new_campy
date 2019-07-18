@@ -8,12 +8,38 @@ class Subject(models.Model):
     name = models.CharField(verbose_name='교과목명', max_length=40)
     university = models.ForeignKey(University, verbose_name='대학', on_delete=models.CASCADE)
     completion_division = models.ForeignKey(CompletionDivision, verbose_name='이수구분', on_delete=models.CASCADE)
-    area = models.ForeignKey(Area, verbose_name='영역', on_delete=models.CASCADE)
+    area = models.ForeignKey(Area, verbose_name='영역', on_delete=models.CASCADE, null=True, blank=True)
     credit = models.FloatField(default=0)
 
     def get_university_subject_list(user_id):
         student_info = StudentInfo.objects.get(user_id=user_id)
         return Subject.objects.filter(university=student_info.university)
+
+    def search_subject(search_name, division, area, university):
+        if division == 0 or area == 0:
+            if area == 0:
+                if division == 0:
+                    if search_name:
+                        return Subject.objects.filter(university_id=university, name__contains=search_name)
+                    return Subject.objects.filter(university_id=university)
+                else:
+                    if search_name:
+                        return Subject.objects.filter(university_id=university, completion_division_id=division,
+                                                      name__contains=search_name)
+                    return Subject.objects.filter(university_id=university,
+                                                  completion_division_id=division)
+            else:
+                if search_name:
+                    return Subject.objects.filter(university_id=university, area_id=area,
+                                                  name__contains=search_name)
+                return Subject.objects.filter(university_id=university,
+                                              area_id=area)
+        if search_name:
+            return Subject.objects.filter(university_id=university, completion_division_id=division,
+                                          area_id=area, name__contains=search_name)
+        return Subject.objects.filter(university_id=university,
+                                      completion_division_id=division,
+                                      area_id=area)
 
 class Lecture(models.Model):
     SEMESTER_CHOICES = (

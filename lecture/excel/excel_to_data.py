@@ -64,7 +64,7 @@ class LectureExcel(object):
                                                      name=division_name)
 
         area = None
-        if area_name is not None:
+        if area_name:
             try:
                 area = Area.objects.get(university_id=self.university_id,
                                         name=area_name)

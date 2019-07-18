@@ -5,6 +5,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
 from student.mixin import DefaultMixin, StaffRequiredMixin
+from university.models import University, CompletionDivision, Area
 from .models import Lecture, Subject
 from .serializers import SubjectSerializer, LectureSerializer
 from .forms import UploadFileForm
@@ -20,6 +21,44 @@ class SubjectLV(DefaultMixin, StaffRequiredMixin, ListView):
     model = Subject
     template_name = 'subject_list.html'
     active = 'subjectManagementActive'
+    paginate_by = 15
+
+    def get_queryset(self):
+        search_name = self.request.GET.get('search_name', '')
+        return Subject.search_subject(search_name, self.kwargs['division'],
+                                      self.kwargs['area'], self.kwargs['university'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #페이지 네이션 수
+        paginator = context['paginator']
+        page_numbers_range = 5  # Display only 5 page numbers
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+
+        #Search 데이터 넣어주기
+        context['current_university'] = self.kwargs['university']
+        context['current_division'] = self.kwargs['division']
+        context['current_area'] = self.kwargs['area']
+
+        #Search Bar 용 대학, 이수구분, 영역 넣어주기
+        context['university_list'] = University.objects.all()
+        context['division_list'] = CompletionDivision.objects.filter(university_id=self.kwargs['university'])
+        context['area_list'] = Area.objects.filter(university_id=self.kwargs['university'])
+
+        #Search 내용 넣어주기
+        context['search_name'] = self.request.GET.get('search_name', '')
+        return context
 
 class LectureLV(DefaultMixin, StaffRequiredMixin, ListView):
     model = Lecture
