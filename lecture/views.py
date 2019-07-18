@@ -9,6 +9,8 @@ from .models import Lecture, Subject
 from .serializers import SubjectSerializer, LectureSerializer
 from .forms import UploadFileForm
 
+from .excel.excel_to_data import LectureExcel
+
 # Create your views here.
 
 '''
@@ -31,6 +33,13 @@ class LectureUploadFV(DefaultMixin, StaffRequiredMixin, FormView):
     form_class = UploadFileForm
     template_name = 'lecture_upload.html'
     active = 'dataUploadActive'
+
+    def form_valid(self, form):
+        filehandle = form.files['file']
+        university_id = form.cleaned_data['university'].id
+        lecture_excel = LectureExcel()
+        lecture_excel.excel_process(filehandle, university_id)
+        return redirect(reverse('lecture_list', kwargs={'university':university_id}))
 
 @login_required
 def LectureUploadFV2(request):

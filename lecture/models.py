@@ -5,7 +5,7 @@ from university.models import Area, CompletionDivision, University, Department
 
 class Subject(models.Model):
     code = models.CharField(verbose_name='교과목코드', max_length=20, primary_key=True)
-    name = models.CharField(verbose_name='교과목명', max_length=20)
+    name = models.CharField(verbose_name='교과목명', max_length=40)
     university = models.ForeignKey(University, verbose_name='대학', on_delete=models.CASCADE)
     completion_division = models.ForeignKey(CompletionDivision, verbose_name='이수구분', on_delete=models.CASCADE)
     area = models.ForeignKey(Area, verbose_name='영역', on_delete=models.CASCADE)
@@ -23,8 +23,8 @@ class Lecture(models.Model):
         (21, '겨울학기'),
     )
     subject = models.ForeignKey(Subject, verbose_name='교과목', on_delete=models.CASCADE)
-    professor = models.CharField(verbose_name='교수님', max_length=10)
-    class_room = models.CharField(verbose_name='강의실', max_length=15)
+    professor = models.CharField(verbose_name='교수님', max_length=40)
+    class_room = models.CharField(verbose_name='강의실', max_length=40)
     opened_year = models.SmallIntegerField(verbose_name='개설년도')
     opened_semester = models.SmallIntegerField(verbose_name='개설학기', choices=SEMESTER_CHOICES, default=0)
     opened_college = models.CharField(verbose_name='개설단', max_length=50)
