@@ -66,7 +66,7 @@ class LectureTime(models.Model):
         ('fir', '금'),
         ('sat', '토'),
     )
-    lecture = models.ForeignKey(Lecture, verbose_name='강의', on_delete=models.CASCADE)
+    lecture = models.ForeignKey(Lecture, verbose_name='강의', related_name='times', on_delete=models.CASCADE)
     week = models.CharField(verbose_name='요일', choices=WEEK_CHOICES, max_length=10)
     start_time = models.TimeField(verbose_name='시작시간')
     end_time = models.TimeField(verbose_name='끝나는시간')

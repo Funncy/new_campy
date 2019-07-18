@@ -3,6 +3,7 @@ from django.views.generic import ListView, FormView
 from django.contrib.auth.decorators import login_required
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 
 from student.mixin import DefaultMixin, StaffRequiredMixin
 from university.models import University, CompletionDivision, Area
@@ -119,7 +120,20 @@ class LectureUploadFV(DefaultMixin, StaffRequiredMixin, FormView):
 '''
  API 
 '''
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 15
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
 class SubjectReadViewset(ReadOnlyModelViewSet):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
     permission_classes = (IsAuthenticated, )
+
+class LectureReadViewset(ReadOnlyModelViewSet):
+    queryset = Lecture.objects.all()
+    serializer_class = LectureSerializer
+    permission_classes = (IsAuthenticated, )
+    pagination_class = StandardResultsSetPagination
+
