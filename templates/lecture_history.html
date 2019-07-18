@@ -302,10 +302,14 @@
               $('#subject_list').empty()
 
               for(var key in result){
+                  var area = ''
+                  if(result[key].subject.area){
+                      area = result[key].subject.area.name
+                  }
                 $('#subject_list').append("<tr><td>"+result[key].subject.name
                 +"</td><td>"+result[key].completion_division.name+"</td><td>"
                 +result[key].completion_year+"</td><td>"+result[key].completion_semester
-                +"</td><td>"+result[key].grade+"</td><td>"+result[key].subject.area.name
+                +"</td><td>"+result[key].grade+"</td><td>"+area
                 +"</td><td>"+result[key].subject.credit
                 +"</td><td><button class='btn btn-warning btn-xs' data-toggle='modal' onclick=update_modal('"+
                 +result[key].id+"','"+result[key].completion_year+"','"+result[key].completion_semester+"','"+result[key].completion_division.id+"','"+result[key].subject.code+"','"+result[key].grade+"')"
