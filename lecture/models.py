@@ -51,6 +51,7 @@ class Lecture(models.Model):
     subject = models.ForeignKey(Subject, verbose_name='교과목', on_delete=models.CASCADE)
     professor = models.CharField(verbose_name='교수님', max_length=40)
     class_room = models.CharField(verbose_name='강의실', max_length=40)
+    class_year = models.SmallIntegerField(verbose_name='학년')
     opened_year = models.SmallIntegerField(verbose_name='개설년도')
     opened_semester = models.SmallIntegerField(verbose_name='개설학기', choices=SEMESTER_CHOICES, default=0)
     opened_college = models.CharField(verbose_name='개설단', max_length=50)

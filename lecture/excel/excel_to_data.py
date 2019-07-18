@@ -15,7 +15,7 @@ class LectureExcel(object):
     # 인덱스 찾기위한 값 초기화
     def __init__(self):
         self.lecture_index = ['학수번호', '메인\n교수명', '강의실', '요일 및 교시',
-                                  '년도', '학기', '개설대학', '개설학과전공']
+                                  '년도', '학기', '개설대학', '개설학과전공', '학년(학기)']
         self.subject_index = ['학수번호', '교과목명', '이수\n구분', '선택영역', '학점']
         self.lecture_index_numbers = list()
         self.subject_index_numbers = list()
@@ -45,7 +45,8 @@ class LectureExcel(object):
         self.get_lecture(data[self.lecture_index_numbers[0]['id']], data[self.lecture_index_numbers[1]['id']],
                          data[self.lecture_index_numbers[2]['id']], data[self.lecture_index_numbers[3]['id']],
                          data[self.lecture_index_numbers[4]['id']], data[self.lecture_index_numbers[5]['id']],
-                         data[self.lecture_index_numbers[6]['id']], data[self.lecture_index_numbers[7]['id']])
+                         data[self.lecture_index_numbers[6]['id']], data[self.lecture_index_numbers[7]['id']],
+                         data[self.lecture_index_numbers[8]['id']])
 
     def get_subject(self, code, name, division_name, area_name, credit):
 
@@ -77,8 +78,8 @@ class LectureExcel(object):
                           completion_division=division, area=area, credit=credit)
         print('생성 완료 subject code='+code+' name='+name)
 
-    def get_lecture(self, code, professor, class_room, class_time, year, semester,
-                    college, department):
+    def get_lecture(self, code, professor, class_room, class_time, opened_year, semester,
+                    college, department, class_year):
 
         #수정 필요 데이터 = 학과, 강의 시간
         #학과 데이터 수정 공백뒤 학과만 저장
@@ -91,15 +92,15 @@ class LectureExcel(object):
         #강의가 이미 있는지 체크
 
         if Lecture.objects.filter(subject_id=code, professor=professor, class_room=class_room,
-                                  opened_year=year, opened_semester=semester, opened_college=college,
-                                  opened_department=department).exists():
+                                  opened_year=opened_year, opened_semester=semester, opened_college=college,
+                                  opened_department=department, class_year=class_year).exists():
             print('이미 있는 강의')
             return
 
         #저장 시작
         lecture_id = Lecture.objects.create(subject_id=code, professor=professor, class_room=class_room,
-                                  opened_year=year, opened_semester=semester, opened_college=college,
-                                  opened_department=department).id
+                                  opened_year=opened_year, opened_semester=semester, opened_college=college,
+                                  opened_department=department, class_year=class_year).id
 
         #시간 저장
         for class_time in split_class_time:

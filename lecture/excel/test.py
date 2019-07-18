@@ -1,5 +1,12 @@
 import re
 
+from lecture.models import Subject, Lecture, LectureTime
+
+def remove():
+    Subject.objects.all().delete()
+    Lecture.objects.all().delete()
+    LectureTime.objects.all().delete()
+    print('delete')
 
 def test():
     class_time = '월수13:30-15:00,목13:30-15:00'
@@ -29,4 +36,4 @@ def test():
     print(split_class_time)
     pass
 
-test()
+remove()
