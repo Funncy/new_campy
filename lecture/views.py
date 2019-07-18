@@ -64,6 +64,41 @@ class LectureLV(DefaultMixin, StaffRequiredMixin, ListView):
     model = Lecture
     template_name = 'lecture_list.html'
     active = 'lectureManagementActive'
+    paginate_by = 15
+
+    def get_queryset(self):
+        search_name = self.request.GET.get('search_name', '')
+        if search_name:
+            return Lecture.objects.filter(subject__university_id=self.kwargs['university'],
+                                          subject__name__contains=search_name)
+        return Lecture.objects.filter(subject__university_id=self.kwargs['university'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #페이지 네이션 수
+        paginator = context['paginator']
+        page_numbers_range = 5  # Display only 5 page numbers
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+
+        #Search 데이터 넣어주기
+        context['current_university'] = self.kwargs['university']
+
+        #Search Bar 용 대학, 이수구분, 영역 넣어주기
+        context['university_list'] = University.objects.all()
+        #Search 내용 넣어주기
+        context['search_name'] = self.request.GET.get('search_name', '')
+        return context
 
 '''
  FILE UPLOAD 로직
@@ -79,15 +114,6 @@ class LectureUploadFV(DefaultMixin, StaffRequiredMixin, FormView):
         lecture_excel = LectureExcel()
         lecture_excel.excel_process(filehandle, university_id)
         return redirect(reverse('lecture_list', kwargs={'university':university_id}))
-
-@login_required
-def LectureUploadFV2(request):
-    if request.user.is_staff is False:
-        return redirect(reverse('index'))
-    context = {}
-    context['dataUploadActive'] = True
-    #GET, POST로 엑셀 파일 로직 추가
-    return render(request, 'lecture_upload.html', context)
 
 
 '''

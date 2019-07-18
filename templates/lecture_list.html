@@ -23,14 +23,20 @@
             <div class="col-md-12">
                     <div class="form-group col-md-4">
                         <label>학교</label>
-                        <select class="form-control select2"></select>
+                        <select class="form-control select2">
+                            {% for university in university_list %}
+                                <option value="{{ university.id }}">{{ university.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
+                    <form method="get" action="">{% csrf_token %}
                     <div class="form-group col-md-4">
                         <label>과목명</label>
-                        <input type="text" class="form-control">
+                        <input name="search_name" type="text" class="form-control">
                     </div>
-                    <button class="btn btn-primary col-md-4" style="margin-top:24px">검색</button>
-
+                    <button type="submit" class="btn btn-primary col-md-4" style="margin-top:24px"
+                    value="{{ search_name }}">검색</button>
+                    </form>
                 <table class="table table-bordered table-striped table-hover text-center">
                     <thead>
                         <tr>
@@ -38,33 +44,75 @@
                             <th>교과목 명</th>
                             <th>교수님 명</th>
                             <th>강의 장소</th>
-                            <th>강의 요일</th>
-                            <th>강의 시간</th>
+                            <th>강의 요일/시간</th>
                             <th>개설년도/학기</th>
-                            <th>개설 학과</th>
+                            <th>개설 단대/학과</th>
                             <th style="width:100px">관리</th>
                         </tr>
                     </thead>
                     <tbody>
+                    {% for lecture in lecture_list %}
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ lecture.subject_id }}</td>
+                            <td>{{ lecture.subject.name }}</td>
+                            <td>{{ lecture.professor }}</td>
+                            <td>{{ lecture.class_room }}</td>
+                            <td>{% for week in lecture.lecturetime_set.all %}
+                                {{ week.week }} {{ week.start_time }}~{{ week.end_time }}<br>
+                            {% endfor %}</td>
+                            <td>{{ lecture.opened_year }}/{{ lecture.get_opened_semester_display }}</td>
+                            <td>{{ lecture.opened_college }}<br>{{ lecture.opened_department }}</td>
                             <td>
                                 <button class="btn btn-warning btn-xs">수정</button>
                                 <button class="btn btn-danger btn-xs" data-toggle="modal" data-target="#delete_modal">삭제</button>
                             </td>
                         </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
           </div>
-          <div class="box-footer"></div>
+          <div class="box-footer">
+              {% if is_paginated %}
+                <nav style="text-align: center">
+                    <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a href="?page={{ page_obj.previous_page_number }}&search_name={{ search_name }}">
+                                <span>Prev</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="disabled">
+                            <a href="#">
+                                <span>Previous</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for page in page_range %}
+                        <li {% if page == page_obj.number %}class="active"{% endif %}>
+                            <a href="?page={{ page }}&search_name={{ search_name }}">{{ page }}</a>
+                        </li>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a href="?page={{ page_obj.next_page_number }}&search_name={{ search_name }}">
+                                <span>Next</span>
+                            </a>
+                        </li>
+                    {% else %}
+                    <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+                        <a href="#">
+                            <span>Next</span>
+                        </a>
+                    </li>
+            {% endif %}
+            </ul>
+            </nav>
+{% endif %}
+          </div>
         </div>
       </div>
 
