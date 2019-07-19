@@ -11,6 +11,8 @@ class SubjectSerializer(serializers.ModelSerializer):
         fields = ('__all__')
 
 class LectureTimeSerializer(serializers.ModelSerializer):
+    start_time = serializers.TimeField(format="%H:%M")
+    end_time = serializers.TimeField(format="%H:%M")
     class Meta:
         model = LectureTime
         fields = ('week', 'start_time', 'end_time')

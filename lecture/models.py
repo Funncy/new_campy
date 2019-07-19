@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from student.models import StudentInfo
 from university.models import Area, CompletionDivision, University, Department
 # Create your models here.
