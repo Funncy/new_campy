@@ -21,12 +21,13 @@
                 </div>
                 <div class="box-body">
                     <div class="col-md-12">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <table class="table table-bordered table-striped table-hover text-center">
                                 <thead>
                                     <tr>
-                                        <th class="col-md-5">이수구분명</th>
-                                        <th class="col-md-5">그룹명</th>
+                                        <th class="col-md-4">이수구분명</th>
+                                        <th class="col-md-4">약어명</th>
+                                        <th class="col-md-2">그룹명</th>
                                         <th class="col-md-2">관리</th>
                                     </tr>
                                 </thead>
@@ -34,7 +35,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <table class="table table-bordered table-striped table-hover text-center">
                                 <thead>
                                     <tr>
@@ -46,7 +47,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <table class="table table-bordered table-striped table-hover text-center">
                                 <thead>
                                     <tr>
@@ -87,6 +88,11 @@
                     <input class="form-control" id="add_division_name">
                 </div>
                 <div class="form-group">
+                    <div id="add_abbreviation_id" style="visibility:hidden"></div>
+                    <label>약어명</label>
+                    <input class="form-control" id="add_abbreviation_name">
+                </div>
+                <div class="form-group">
                     <div id="add_group_id" style="visibility:hidden"></div>
                     <label>그룹명</label>
                     <input class="form-control" id="add_group_name">
@@ -118,6 +124,11 @@
                     <input class="form-control" id="update_division_name">
                 </div>
                 <div class="form-group">
+                    <div id="update_abbreviation_id" style="visibility:hidden"></div>
+                    <label>약어명</label>
+                    <input class="form-control" id="update_abbreviation_name">
+                </div>
+                <div class="form-group">
                     <label>그룹명</label>
                     <input class="form-control" id="update_group_name">
                 </div>
@@ -146,6 +157,11 @@
                         <div id="delete_division_id" style="visibility:hidden"></div>
                         <label>이수구분명</label>
                         <div class="form-control" id="delete_division_name"></div>
+                    </div>
+                    <div class="form-group">
+                        <div id="delete_abbreviation_id" style="visibility:hidden"></div>
+                        <label>이수구분명</label>
+                        <div class="form-control" id="delete_abbreviation_name"></div>
                     </div>
                     <div class="form-group">
                         <div id="delete_group_id" style="visibility:hidden"></div>
@@ -385,11 +401,11 @@
           $('#division_table').empty()
           
           for(var key in result){
-              $('#division_table').append("<tr><td>"+result[key].name+"</td><td>"+result[key].group_name+"</td><td><button class='btn btn-warning btn-xs' onclick=\"update_division_modal('"+result[key].id+"','"+result[key].name+"','"+result[key].group_name+"')\" data-toggle='modal' data-target='#division_update_modal'>수정</button><button class='btn btn-danger btn-xs' onclick=\"delete_division_modal('"+result[key].id+"','"+result[key].name+"','"+result[key].group_name+"')\" data-toggle='modal' data-target='#division_delete_modal'>삭제</button></td></tr>")
+              $('#division_table').append("<tr><td>"+result[key].name+"</td><td>"+result[key].abbreviation+"</td><td>"+result[key].group_name+"</td><td><button class='btn btn-warning btn-xs' onclick=\"update_division_modal('"+result[key].id+"','"+result[key].name+"','"+result[key].abbreviation+"','"+result[key].group_name+"')\" data-toggle='modal' data-target='#division_update_modal'>수정</button><button class='btn btn-danger btn-xs' onclick=\"delete_division_modal('"+result[key].id+"','"+result[key].name+"','"+result[key].abbreviation+"','"+result[key].group_name+"')\" data-toggle='modal' data-target='#division_delete_modal'>삭제</button></td></tr>")
            }
 
           //추가 버튼 있는 한줄 
-          $('#division_table').append("<tr><td></td><td></td><td><button class='btn btn-primary btn-xs' data-toggle='modal' onclick=add_division_modal() data-target='#division_add_modal'>추가</button></td></tr>")
+          $('#division_table').append("<tr><td></td><td></td><td></td><td><button class='btn btn-primary btn-xs' data-toggle='modal' onclick=add_division_modal() data-target='#division_add_modal'>추가</button></td></tr>")
         },
         error:function(request,status,error){
             alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -447,14 +463,30 @@
 
     //이수구분 수정버튼 눌렀을때
     $('#update_division').click(function(){
+            
+            if($('#update_division_name').val().indexOf("'") != -1){
+                alert("사용할수 없는 문자가 포함되어있습니다.")
+                return;
+            }
+            if($('#update_group_name').val().indexOf("'") != -1){
+                alert("사용할수 없는 문자가 포함되어있습니다.")
+                return;
+            }
+            if($('#update_abbreviation_name').val().indexOf("'") != -1){
+                alert("사용할수 없는 문자가 포함되어있습니다.")
+                return;
+            }
+
         $.ajax({
         url: '/university/api/division/'+$('#update_division_id').text()+'/',
         type: 'patch',
         data: {
             'name':$('#update_division_name').val(),
-            'group_name':$('#update_group_name').val()
+            'group_name':$('#update_group_name').val(),
+            'abbreviation':$('#update_abbreviation_name').val()
             },
         success: function (result) {
+
           reload_division();
         },
         error:function(request,status,error){
@@ -480,6 +512,20 @@
 
     //이수구분 추가버튼 눌렀을때
     $('#add_division').click(function(){
+
+        if($('#add_division_name').val().indexOf("'") != -1){
+            alert("사용할수 없는 문자가 포함되어있습니다.")
+            return;
+        }
+        if($('#add_group_name').val().indexOf("'") != -1){
+            alert("사용할수 없는 문자가 포함되어있습니다.")
+            return;
+        }
+        if($('#add_abbreviation_name').val().indexOf("'") != -1){
+            alert("사용할수 없는 문자가 포함되어있습니다.")
+            return;
+        }
+
         $.ajax({
         url: '/university/api/division/',
         type: 'post',
@@ -487,6 +533,7 @@
             'university':'{{ university.id }}',
             'name': $('#add_division_name').val(),  
             'group_name': $('#add_group_name').val(),
+            'abbreviation': $('#add_abbreviation_name').val()
             },
         success: function (result) {
           reload_division();
@@ -500,6 +547,12 @@
 
     //영역 수정버튼 눌렀을때
     $('#update_area').click(function(){
+
+        if($('#update_area_name').val().indexOf("'") != -1){
+            alert("사용할수 없는 문자가 포함되어있습니다.")
+            return;
+        }
+
         $.ajax({
         url: '/university/api/area/'+$('#update_area_id').text()+'/',
         type: 'patch',
@@ -530,6 +583,12 @@
 
     //영역 추가버튼 눌렀을때
     $('#add_area').click(function(){
+
+        if($('#add_area_name').val().indexOf("'") != -1){
+            alert("사용할수 없는 문자가 포함되어있습니다.")
+            return;
+        }
+
         $.ajax({
         url: '/university/api/area/',
         type: 'post',
@@ -547,6 +606,13 @@
 
     //트랙 수정버튼 눌렀을때
     $('#update_track').click(function(){
+
+        if($('#update_track_name').val().indexOf("'") != -1){
+            alert("사용할수 없는 문자가 포함되어있습니다.")
+            return;
+        }
+
+
         $.ajax({
         url: '/university/api/track/'+$('#update_track_id').text()+'/',
         type: 'patch',
@@ -579,6 +645,12 @@
 
     //트랙 추가버튼 눌렀을때
     $('#add_track').click(function(){
+
+        if($('#add_track_name').val().indexOf("'") != -1){
+            alert("사용할 수 없는 문자가 포함되어있습니다.")
+            return;
+        }
+
         $.ajax({
         url: '/university/api/track/',
         type: 'post',
@@ -595,23 +667,26 @@
     
 
     //이수구분 삭제 모달 데이터 입력
-    function delete_division_modal(division_id,division_name,group_name){
+    function delete_division_modal(division_id,division_name,abbreviation_name,group_name){
         $('#delete_division_id').text(division_id)
         $('#delete_division_name').text(division_name)
+        $('#delete_abbreviation_name').text(abbreviation_name)
         $('#delete_group_name').text(group_name)
     }
 
     //이수구분 수정 모달 데이터 입력
-    function update_division_modal(division_id,division_name,group_name){
+    function update_division_modal(division_id,division_name,abbreviation_name,group_name){
         $('#update_division_id').text(division_id)
         $('#update_division_name').val(division_name)
+        $('#update_abbreviation_name').val(abbreviation_name)
         $('#update_group_name').val(group_name)
     }
     
     //이수구분 추가 모달 데이터 입력
-    function add_division_modal(division_id,division_name,group_name){
+    function add_division_modal(division_id,division_name,abbreviation_name,group_name){
         $('#add_division_id').text(division_id)
         $('#add_division_name').val(division_name)
+        $('#add_abbreviation_name').val(abbreviation_name)
         $('#add_group_name').val(group_name)
     }
 
