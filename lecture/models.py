@@ -60,11 +60,19 @@ class Lecture(models.Model):
     def get_lectures(university_id, division, department):
         # 특정 이수구분
         if division:
-            return Lecture.objects.filter(subject__university_id=university_id,
-                                          subject__completion_division_id=division,
-                                          opened_department=department)
-        return Lecture.objects.filter(subject__university_id=university_id,
-                                      opened_department=department)
+            if department:
+                return Lecture.objects.filter(subject__university_id=university_id,
+                                              subject__completion_division_id=division,
+                                              opened_department=department)
+            else:
+                return Lecture.objects.filter(subject__university_id=university_id,
+                                          subject__completion_division_id=division)
+        else:
+            if department:
+                return Lecture.objects.filter(subject__university_id=university_id,
+                                              opened_department=department)
+            else:
+                return Lecture.objects.filter(subject__university_id=university_id)
 
 class LectureTime(models.Model):
     WEEK_CHOICES = (
