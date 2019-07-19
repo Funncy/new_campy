@@ -27,11 +27,9 @@
                                 <div class="form-group">
                                     <label>학과 선택</label>
                                     <select class="form-control select2" style="width:100%">
+                                        <option selected="selected">전체</option>
                                         {% for department in department_list %}
-                                            <option value="{{ department.pk }}"
-                                            {% if department.opened_department == student_department %}
-                                                selected
-                                            {% endif %}>{{ department.opened_department }}</option>
+                                            <option value="{{ department.pk }}">{{ department.opened_department }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>

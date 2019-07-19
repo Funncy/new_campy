@@ -22,5 +22,5 @@ class LectureSerializer(serializers.ModelSerializer):
     times = LectureTimeSerializer(many=True, read_only=True)
     class Meta:
         model = Lecture
-        fields = ('subject', 'professor', 'class_room', 'class_year', 'opened_year',
+        fields = ('id', 'subject', 'professor', 'class_room', 'class_year', 'opened_year',
                   'opened_semester', 'opened_college', 'opened_department', 'times')
