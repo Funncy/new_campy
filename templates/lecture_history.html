@@ -96,10 +96,10 @@
                       <div class="form-group">
                           <label>이수 학기</label>
                           <select class="form-control" id="add_semester">
-                              <option value="1">1학기</option>
-                              <option value="2">2학기</option>
-                              <option value="3">여름학기(계절)</option>
-                              <option value="4">겨울학기(계절)</option>
+                              <option value="10">1학기</option>
+                              <option value="20">2학기</option>
+                              <option value="11">여름학기(계절)</option>
+                              <option value="21">겨울학기(계절)</option>
                           </select>
                       </div>
                   </div>
@@ -176,10 +176,10 @@
                       <div class="form-group">
                           <label>이수 학기</label>
                           <select class="form-control" id="update_semester">
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">여름학기(계절)</option>
-                              <option value="4">겨울학기(계절)</option>
+                              <option value="10">1학기</option>
+                              <option value="20">2학기</option>
+                              <option value="11">여름학기(계절)</option>
+                              <option value="21">겨울학기(계절)</option>
                           </select>
                       </div>
                   </div>
@@ -302,10 +302,14 @@
               $('#subject_list').empty()
 
               for(var key in result){
+                  var area = ''
+                  if(result[key].subject.area){
+                      area = result[key].subject.area.name
+                  }
                 $('#subject_list').append("<tr><td>"+result[key].subject.name
                 +"</td><td>"+result[key].completion_division.name+"</td><td>"
                 +result[key].completion_year+"</td><td>"+result[key].completion_semester
-                +"</td><td>"+result[key].grade+"</td><td>"+result[key].subject.area.name
+                +"</td><td>"+result[key].grade+"</td><td>"+area
                 +"</td><td>"+result[key].subject.credit
                 +"</td><td><button class='btn btn-warning btn-xs' data-toggle='modal' onclick=update_modal('"+
                 +result[key].id+"','"+result[key].completion_year+"','"+result[key].completion_semester+"','"+result[key].completion_division.id+"','"+result[key].subject.code+"','"+result[key].grade+"')"

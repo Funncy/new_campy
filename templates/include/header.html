@@ -242,7 +242,7 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{% if subjectManagementActive %}active{% endif %}"><a href="{% url 'subject_list' university=1 division=1 area=1 %}">과목 관리</a></li>
+                        <li class="{% if subjectManagementActive %}active{% endif %}"><a href="{% url 'subject_list' university=1 division=0 area=0 %}">과목 관리</a></li>
                         <li class="{% if lectureManagementActive %}active{% endif %}"><a href="{% url 'lecture_list' university=1 %}">강의 관리</a></li>
                         <li class="{% if dataUploadActive %}active{% endif %}"><a href="{% url 'lecture_upload' %}">데이터 업로드</a></li>
                     </ul>

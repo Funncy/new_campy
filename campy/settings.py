@@ -125,6 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
                         "django_excel.TemporaryExcelFileUploadHandler")
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 

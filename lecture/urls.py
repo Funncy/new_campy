@@ -5,6 +5,7 @@ from . import views
 
 router = DefaultRouter()
 router.register(r'subject', views.SubjectReadViewset)
+router.register(r'lecture', views.LectureReadViewset)
 
 urlpatterns = [
     # UI
