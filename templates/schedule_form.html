@@ -26,10 +26,12 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>학과 선택</label>
-                                    <select class="form-control select2" style="width:100%">
-                                        <option selected="selected">전체</option>
+                                    <select id="department_select" class="form-control select2" style="width:100%">
                                         {% for department in department_list %}
-                                            <option value="{{ department.pk }}">{{ department.opened_department }}</option>
+                                            <option value="{{ department.pk }}"
+                                            {% if department.opened_department == student_department %}
+                                                selected
+                                            {% endif %}>{{ department.opened_department }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -37,8 +39,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>이수 구분</label>
-                                    <select class="form-control select2" style="width:100%">
-                                        <option selected="selected">전체</option>
+                                    <select id="division_select" class="form-control select2" style="width:100%">
+                                        <option selected="selected" value="">전체</option>
                                         {% for division in division_list %}
                                             <option value="{{ division.id }}">{{ division.name }}</option>
                                         {% endfor %}
@@ -73,20 +75,7 @@
                                                     <th style="width: 10%">학점</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                            {% for lecture in lecture_list %}
-                                                <tr onclick="set_data('{{ lecture.subject.name }}')">
-                                                    <td>{{ lecture.subject.name }}</td>
-                                                    <td>{{ lecture.professor }}</td>
-                                                    <td>{% for week in lecture.times.all %}
-                                                        <!--{{ week.start_time|time:'H:i'}}-->
-                                                    {{ week.week }} {{ week.start_time}}~{{ week.end_time }}<br>
-                                                    {% endfor %}</td>
-                                                    <td>{{ lecture.subject.completion_division.name }}</td>
-                                                    <td>{{ lecture.class_year }}</td>
-                                                    <td>{{ lecture.subject.credit }}</td>
-                                                </tr>
-                                            {% endfor %}
+                                            <tbody id="subject_table">
                                             </tbody>
                                     </table>
                                 </div>
@@ -94,29 +83,6 @@
                         </div>
                     </div>
                     <div class="box-footer">
-                    {% if lecture_list.has_other_pages %}
-                         <nav style="text-align: center">
-                        <ul class="pagination">
-                        {% if lecture_list.has_previous %}
-                            <li><a href="?page={{ lecture_list.previous_page_number }}">&laquo;</a></li>
-                        {% else %}
-                            <li class="disabled"><span>&laquo;</span></li>
-                        {% endif %}
-                        {% for i in page_range %}
-                                {% if lecture_list.number == i %}
-                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-                                {% else %}
-                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
-                            {% endif %}
-                        {% endfor %}
-                        {% if lecture_list.has_next %}
-                            <li><a href="?page={{ lecture_list.next_page_number }}">&raquo;</a></li>
-                        {% else %}
-                            <li class="disabled"><span>&raquo;</span></li>
-                        {% endif %}
-                        </ul>
-                         </nav>
-                    {% endif %}
                     </div>
                 </div>
             </div>
@@ -144,32 +110,32 @@
                         <tbody>
                                 <tr>
                                         <td style="width:10%; height:9%">08:00</td>
-                                        <td id="mon800" style="width:15%; height:9%;">
+                                        <td id="mon0800" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                 <div name="subject_code" style="display:none">1</div>
                                             </div>
                                         </td>
-                                        <td id="tue800" style="width:15%; height:9%;">
+                                        <td id="tue0800" style="width:15%; height:9%;">
                                                 <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                         </td>
-                                        <td id="wed800" style="width:15%; height:9%;">
+                                        <td id="wed0800" style="width:15%; height:9%;">
                                                 <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                         </td>
-                                        <td id="thur800" style="width:15%; height:9%;">
+                                        <td id="thu0800" style="width:15%; height:9%;">
                                                 <div name="subject" style="width: 100%; height:100%;">
                                                         <div name="subject_code" style="display:none">1</div>
                                                     </div>
                                         </td>
-                                        <td id="fri800" style="width:15%; height:9%;">
+                                        <td id="fri0800" style="width:15%; height:9%;">
                                                 <div name="subject" style="width: 100%; height:100%;">
                                                         <div name="subject_code" style="display:none">1</div>
                                                     </div>
                                         </td>
-                                        <td id="sat800" style="width:15%; height:9%;">
+                                        <td id="sat0800" style="width:15%; height:9%;">
                                                 <div name="subject" style="width: 100%; height:100%;">
                                                         <div name="subject_code" style="display:none">1</div>
                                                     </div>
@@ -177,32 +143,32 @@
                                     </tr>
                             <tr>
                                     <td style="width:10%; height:9%">09:00</td>
-                                    <td id="mon900" style="width:15%; height:9%;">
+                                    <td id="mon0900" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                     </td>
-                                    <td id="tue900" style="width:15%; height:9%;">
+                                    <td id="tue0900" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                     </td>
-                                    <td id="wed900" style="width:15%; height:9%;">
+                                    <td id="wed0900" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                     </td>
-                                    <td id="thur900" style="width:15%; height:9%;">
+                                    <td id="thu0900" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                     </td>
-                                    <td id="fri900" style="width:15%; height:9%;">
+                                    <td id="fri0900" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                     </td>
-                                    <td id="sat900" style="width:15%; height:9%;">
+                                    <td id="sat0900" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
@@ -225,7 +191,7 @@
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                     </td>
-                                    <td id="thur1000" style="width:15%; height:9%;">
+                                    <td id="thu1000" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
@@ -258,7 +224,7 @@
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                     </td>
-                                    <td id="thur1100" style="width:15%; height:9%;">
+                                    <td id="thu1100" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
@@ -291,7 +257,7 @@
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                     </td>
-                                    <td id="thur1200" style="width:15%; height:9%;">
+                                    <td id="thu1200" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
@@ -324,7 +290,7 @@
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                     </td>
-                                    <td id="thur1300" style="width:15%; height:9%;">
+                                    <td id="thu1300" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
@@ -357,7 +323,7 @@
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                     </td>
-                                    <td id="thur1400" style="width:15%; height:9%;">
+                                    <td id="thu1400" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
@@ -390,7 +356,7 @@
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                     </td>
-                                    <td id="thur1500" style="width:15%; height:9%;">
+                                    <td id="thu1500" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
@@ -423,7 +389,7 @@
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                     </td>
-                                    <td id="thur1600" style="width:15%; height:9%;">
+                                    <td id="thu1600" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
@@ -456,7 +422,7 @@
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
                                     </td>
-                                    <td id="thur1700" style="width:15%; height:9%;">
+                                    <td id="thu1700" style="width:15%; height:9%;">
                                             <div name="subject" style="width: 100%; height:100%;">
                                                     <div name="subject_code" style="display:none">1</div>
                                                 </div>
@@ -489,7 +455,7 @@
                                                 <div name="subject_code" style="display:none">1</div>
                                             </div>
                                 </td>
-                                <td id="thur1800" style="width:15%; height:9%;">
+                                <td id="thu1800" style="width:15%; height:9%;">
                                         <div name="subject" style="width: 100%; height:100%;">
                                                 <div name="subject_code" style="display:none">1</div>
                                             </div>
@@ -499,7 +465,7 @@
                                                 <div name="subject_code" style="display:none">1</div>
                                             </div>
                                 </td>
-                                <td id="ex" style="width:15%; height:9%;">
+                                <td id="sat1800" style="width:15%; height:9%;">
                                         <div id="ex2" name="subject" style="width: 100%; height:100%;">
                                                 <div name="subject_code" style="display:none">1</div>
                                             </div>
@@ -521,6 +487,27 @@
           <!--------------------------
             | Your Page Content Here |
             -------------------------->
+          </div>
+          <div class="box box-primary">
+              <div class="box-header with-border">선택 과목</div>
+              <div class="box-body">
+                  <table class="table table-bordered table-striped table-hover text-center" id="select-subject">
+                      <thead>
+                          <tr>
+                              <th>과목</th>
+                              <th>교수</th>
+                              <th>강의 시간</th>
+                              <th>이수구분</th>
+                              <th>학년</th>
+                              <th>학점</th>
+                              <th>관리</th>
+                          </tr>
+                      </thead>
+                      <tbody id="select_subject_list">
+                      </tbody>
+                  </table>
+              </div>
+              <div class="box-footer"></div>
           </div>
         </div>
 
@@ -636,10 +623,376 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-<script>
-    function set_data(name){
-        alert(name)
-    }
-</script>
+  <script>
+        function set_data(name){
+            alert(name)
+        }
+    
+        $(document).ready(function(){
+            reload();
+        })
+    
+        function reload(){
+            $.ajax({
+            url: '/lecture/api/lecture/',
+            type: 'get',
+            data: {
+                'department':$('#department_select').val(),
+                'division':$('#division_select').val()
+                },
+            success: function (result) {
+    
+              //엠프티
+              $('#subject_table').empty()
+            
+            var tr_data;
+            var week;
+            var start_time;
+            var end_time;
+            
+            for(var key in result.results){
+                tr_data = "<tr onclick=set_schedule_data('"+result.results[key].id+"')><td>"+result.results[key].subject.name+"</td><td>"+result.results[key].professor+"</td><td>"
+                for(var key2 in result.results[key].times){
+                    week = result.results[key].times[key2].week
+                    start_time = result.results[key].times[key2].start_time
+                    end_time = result.results[key].times[key2].end_time
+    
+                    tr_data += week+" "+start_time+"-"+end_time+"<br>"
+                }
+                tr_data += "</td><td>"+result.results[key].subject.completion_division.name+"</td><td>"+result.results[key].class_year+"</td><td>"+result.results[key].subject.credit+"</td></tr>"
+                
+                $('#subject_table').append(tr_data)
+            }
+    
+              
+            },
+            error:function(request,status,error){
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+            }) 
+        }
+        var add_subject = 0;
+
+        //div 정보 용
+        var schedule_array = new Array()
+        // 스케쥴 겹치는거 확인용
+        var schedule_dict = {
+            "mon" : {
+                "0800" : false,
+                "0900" : false,
+                "1000" : false,
+                "1100" : false,
+                "1200" : false,
+                "1300" : false,
+                "1400" : false,
+                "1500" : false,
+                "1600" : false,
+                "1700" : false,
+                "1800" : false,
+                "1900" : false,
+                "2000" : false
+
+            },
+            "tue" : {
+                "0800" : false,
+                "0900" : false,
+                "1000" : false,
+                "1100" : false,
+                "1200" : false,
+                "1300" : false,
+                "1400" : false,
+                "1500" : false,
+                "1600" : false,
+                "1700" : false,
+                "1800" : false,
+                "1900" : false,
+                "2000" : false
+
+            },
+            "wed" : {
+                "0800" : false,
+                "0900" : false,
+                "1000" : false,
+                "1100" : false,
+                "1200" : false,
+                "1300" : false,
+                "1400" : false,
+                "1500" : false,
+                "1600" : false,
+                "1700" : false,
+                "1800" : false,
+                "1900" : false,
+                "2000" : false
+
+            },
+            "thu" : {
+                "0800" : false,
+                "0900" : false,
+                "1000" : false,
+                "1100" : false,
+                "1200" : false,
+                "1300" : false,
+                "1400" : false,
+                "1500" : false,
+                "1600" : false,
+                "1700" : false,
+                "1800" : false,
+                "1900" : false,
+                "2000" : false
+
+            },
+            "fri" : {
+                "0800" : false,
+                "0900" : false,
+                "1000" : false,
+                "1100" : false,
+                "1200" : false,
+                "1300" : false,
+                "1400" : false,
+                "1500" : false,
+                "1600" : false,
+                "1700" : false,
+                "1800" : false,
+                "1900" : false,
+                "2000" : false
+
+            },
+            "sat" : {
+                "0800" : false,
+                "0900" : false,
+                "1000" : false,
+                "1100" : false,
+                "1200" : false,
+                "1300" : false,
+                "1400" : false,
+                "1500" : false,
+                "1600" : false,
+                "1700" : false,
+                "1800" : false,
+                "1900" : false,
+                "2000" : false
+
+            }
+        }
+
+        function set_schedule_data(id){
+
+
+            $.ajax({
+            url: '/lecture/api/lecture/'+id+"/",
+            type: 'get',
+            data: {},
+            
+            success: function (result) {
+                var week;
+                for(var key in result.times){
+                    if(result.times[key].week == '월'){
+                        week = 'mon'
+                    }else if(result.times[key].week == '화'){
+                        week = 'tue'
+                    }else if(result.times[key].week == '수'){
+                        week = 'wed'
+                    }else if(result.times[key].week == '목'){
+                        week = 'thu'
+                    }else if(result.times[key].week == '금'){
+                        week = 'fri'
+                    }else if(result.times[key].week == '토'){
+                        week = 'sat'
+                    }
+                    alert(week)
+                    add_schedule(week ,result.times[key].start_time, result.times[key].end_time, result.name, result.subject.code)
+                }
+                $('#select_subject_list').append('<tr><td>'+result.subject.name+'</td><td>'+result.professor+'</td><td>'+result.times[key].week + result.times[key].start_time +'-'+ result.times[key].end_time+'</td><td>'+result.subject.completion_division.name+'</td><td>'+result.class_year+'</td><td>'+result.subject.credit+'</td><td><button onclick=select_delete(this) class="btn btn-xs btn-danger">삭제</button></td></tr>')
+            },
+            error:function(request,status,error){
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+            }) 
+        }
+        
+        //시간표에 div 생성
+
+        function add_schedule(day, start_time, end_time, subject_name, subject_code){
+
+            //check time
+            if(!check_time(day, start_time, end_time)){
+                alert('과목 시간을 확인해주세요!')
+                return
+            }
+
+            //div position
+            div_position = calculate_schedule(day, start_time, end_time)
+            
+            //div id
+            var subject_add_id = parseInt(schedule_array.length)
+            subject_add_id ++;
+
+            //div add
+            schedule = new Array();
+            schedule.push(subject_add_id)
+            schedule.push(day)
+            schedule.push(start_time)
+            schedule.push(end_time)
+            schedule.push(div_position)
+            schedule.push(subject_name)
+            schedule.push(subject_code)
+
+            $('#table_body').prepend(
+            "<div id='subject_add_"+subject_add_id+"' style='position:absolute;text-align:center;top:"+div_position[0]+"px; left:"
+            +div_position[1]+"px; background-color:#BBDEFB; width:"+div_position[2]+"px; height:"+div_position[3]+
+            "px; z-index:99'><div style='margin-top:170px'><span>"+subject_name+
+            "</span><br><button class='btn btn-xs btn-warning''>수정</button><button class='btn btn-xs btn-danger' onclick=delete_subject('"
+            +subject_code+"') id='delete_this'>삭제</button></div></div>"
+            
+            )
+
+            schedule_array.push(schedule)
+            console.log(schedule_array)
+        }
+
+        function resize_schedule(day, start_time, end_time){
+
+            for(key in schedule_array){
+                div_position = calculate_schedule(schedule_array[key][1], schedule_array[key][2], schedule_array[key][3])
+                schedule_array[key][4] = div_position
+
+                $('#subject_add_'+schedule_array[key][0]).css("top",div_position[0])
+                $('#subject_add_'+schedule_array[key][0]).css("left",div_position[1])
+                $('#subject_add_'+schedule_array[key][0]).css("width",div_position[2])
+                $('#subject_add_'+schedule_array[key][0]).css("height",div_position[3]) 
+            }
+        }
+
+        function calculate_schedule(day, start_time, end_time){
+            
+            start_time = start_time.replace(':','')
+            end_time = end_time.replace(':','')
+
+            var div_top_ex1 = $('#'+day+start_time).position().top + 2;
+            var div_left_ex1 = $('#'+day+start_time).position().left + 2;
+
+            var div_width_ex1 = $('#'+day+start_time).outerWidth() ;
+            var div_height_ex1 = $('#'+day+start_time).outerHeight() ;
+
+            var div_top_ex2 = $('#'+day+end_time).position().top;
+            var div_left_ex2 = $('#'+day+end_time).position().left;
+
+            var div_width_ex2 = $('#'+day+end_time).outerWidth() ;
+            var div_height_ex2 = $('#'+day+end_time).outerHeight();
+
+            var height = div_top_ex2-div_top_ex1+div_height_ex1+3
+
+            div_top_ex1 += $('#calendar_table').position().top
+            div_left_ex1 += $('#calendar_table').position().left
+            
+            var div_position = [div_top_ex1, div_left_ex1, div_width_ex1, height]
+
+            return div_position
+        }
+
+        function delete_subject(subject_code){
+            console.log('delete')
+            //삭제용 array
+            delete_array = new Array()
+
+            var find_flag = false
+
+            for(var key in schedule_array){
+                if(schedule_array[key][6] == subject_code){
+                    //div 삭제 
+                    $('#subject_add_'+schedule_array[key][0]).remove()
+
+                    //schedule_dict 삭제
+                    for(var key2 in schedule_dict[schedule_array[key][1]]){
+                        if(find_flag==false){
+                            if(key2 == schedule_array[key][2]){
+                                find_flag = true
+                                schedule_dict[schedule_array[key][1]][key2] = false
+                            }
+                        }else{
+                            schedule_dict[schedule_array[key][1]][key2] = false
+                            if(key2 == schedule_array[key][3]){
+                                find_flag = false
+                            }
+                        }
+                    }
+
+                    //array 삭제
+                    
+                    console.log('dlete_subject key='+key)
+                    console.log(schedule_array)
+                    delete_array.push(key)
+                }
+            }
+
+            //삭제를 위한 역순 정렬
+            delete_array.reverse()
+            for(var key in delete_array){
+                schedule_array.splice(delete_array[key], 1)
+            }
+            console.log('dlete_subject')
+            console.log(schedule_dict)
+            console.log(schedule_array)
+        }
+
+        function check_time(day, start_time, end_time){
+            console.log('check time')
+            var find_array = new Array()
+            var find_flag = false
+
+            for(var key in schedule_dict){
+                if(key == day){
+                    //충돌 확인 및 저장 데이터 세이브
+                    for(var key2 in schedule_dict[key]){
+                        if(find_flag == false){
+                            if(start_time == key2){
+                                find_array.push(key2)
+                                find_flag = true
+
+                                //충돌
+                                if(schedule_dict[key][key2] == true)
+                                    return false
+                            }
+                        }else{
+                            find_array.push(key2)
+
+                            //충돌
+                            if(schedule_dict[key][key2] == true)
+                                    return false
+
+                            if(end_time == key2){
+                                find_flag = false
+                            }
+                        }
+                        
+                    }
+                }
+            }
+
+            // dict true 셋팅
+            for(var key in schedule_dict[day]){
+                for(var key2 in find_array){
+                    if(find_array[key2] == key){
+                        schedule_dict[day][key] = true
+                    }
+                }
+            }
+
+            console.log(find_array)
+
+            console.log(schedule_dict)
+            return true
+        }
+
+        $(window).resize(function(){
+            resize_schedule()
+        })
+
+        function select_delete(data){
+            $(data).parent().parent().remove()
+        }
+
+    </script>
+    
 
 {% include "include/footer.html" %}
