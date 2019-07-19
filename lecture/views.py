@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 
 from student.mixin import DefaultMixin, StaffRequiredMixin
+from student.models import StudentInfo
 from university.models import University, CompletionDivision, Area
 from .models import Lecture, Subject
 from .serializers import SubjectSerializer, LectureSerializer
@@ -136,4 +137,17 @@ class LectureReadViewset(ReadOnlyModelViewSet):
     serializer_class = LectureSerializer
     permission_classes = (IsAuthenticated, )
     pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        #학생정보러 대학 필터링
+        university_id = StudentInfo.get_university_id(self.request.user.id)
+
+        #학과, 이수구분으로 데이터 필터링
+        division = self.request.query_params.get('division')
+        department = self.request.query_params.get('department')
+
+        #추가 필터링
+
+        return Lecture.get_lectures(university_id, division, department)
+
 

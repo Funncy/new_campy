@@ -4,6 +4,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from lecture.models import Lecture
 from student.mixin import DefaultMixin, LoginRequiredMixin
+from student.models import StudentInfo
+from university.models import CompletionDivision
 from .models import Schedule
 # Create your views here.
 
@@ -23,12 +25,26 @@ class ScheduleCV(DefaultMixin, LoginRequiredMixin, CreateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        #학생데이터로 대학 정보 가져오기
+        student = StudentInfo.objects.get(user_id=self.request.user.id)
+        university_id = student.university_id
+        context['student_department'] = student.major.name
+
+        # 강의에서 학과 데이터
+        departments = Lecture.objects.values('opened_department').order_by('opened_department').distinct()
+        context['department_list'] = departments
+
+        # 강의에서 이수구분 데이터
+        divisions = CompletionDivision.objects.filter(university_id=university_id)
+        context['division_list'] = divisions
+
         #강의 학년 학기 필터링
         # 임시 2013년 1학기(10)
 
         lectures = Lecture.objects.filter(
             opened_year=2013,
-            opened_semester=10
+            opened_semester=10,
+            subject__university_id=university_id
         )
 
         #페이지네이션

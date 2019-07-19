@@ -23,6 +23,9 @@ class StudentInfo(models.Model):
         except StudentInfo.DoesNotExist:
             return None
 
+    def get_university_id(user_id):
+        return StudentInfo.objects.get(user_id=user_id).university_id
+
     def get_absolute_url(self):
         return reverse('mypage', args=[self.id])
 

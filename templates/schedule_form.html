@@ -27,21 +27,23 @@
                                 <div class="form-group">
                                     <label>학과 선택</label>
                                     <select class="form-control select2" style="width:100%">
-                                        <option selected="selected">2</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
+                                        {% for department in department_list %}
+                                            <option value="{{ department.pk }}"
+                                            {% if department.opened_department == student_department %}
+                                                selected
+                                            {% endif %}>{{ department.opened_department }}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>구분</label>
+                                    <label>이수 구분</label>
                                     <select class="form-control select2" style="width:100%">
-                                        <option selected="selected">2</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
+                                        <option selected="selected">전체</option>
+                                        {% for division in division_list %}
+                                            <option value="{{ division.id }}">{{ division.name }}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                             </div>
