@@ -27,6 +27,7 @@
                                 <div class="form-group">
                                     <label>학과 선택</label>
                                     <select id="department_select" class="form-control select2" style="width:100%">
+                                        <option value="">전체 학과</option>
                                         {% for department in department_list %}
                                             <option value="{{ department.pk }}"
                                             {% if department.opened_department == student_department %}

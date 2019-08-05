@@ -23,20 +23,32 @@
                     <div class="col-md-12">
                       <div class="row" style="margin-top:10px">
                         <label>입학년도</label>
-                        <div class="form-control"></div>
+                        <div class="form-control">{{ student.admission_year }}</div>
                       </div>
                       <div class="row" style="margin-top:10px">
                           <label>주전공</label>
-                          <div class="form-control"></div>
+                          <div class="form-control">{{ student.major.college_name }} : {{ student.major.name }}</div>
                         </div>
                         <div class="row" style="margin-top:10px">
+                         {% if user.is_authenticated %}
+                             {% for major in user.add_majors.all %}
                             <label>부전공</label>
-                            <div class="form-control"></div>
+                            <div class="form-control">
+                                    {% if major.major_division == 'sub_major' %}
+                                        {{ major.major.college_name }} : {{ major.major.name }}
+                                    {% endif %}
+                            </div>
                           </div>
                           <div class="row" style="margin-top:10px">
                               <label>복수전공</label>
-                              <div class="form-control"></div>
+                              <div class="form-control">
+                                  {% if major.major_division == 'multi_major' %}
+                                        {{ major.major.college_name }} : {{ major.major.name }}
+                                    {% endif %}
+                              </div>
                           </div>
+                             {% endfor %}
+                         {% endif %}
                     </div>
                   </div>
                   <div class="box-footer"></div>
@@ -55,19 +67,29 @@
                       <div class="row">
                         <div class="progress-group">
                           <span class="progress-text">2015_컴퓨터 공학과 총합 학점</span>
-                          <span class="progress-number"><b>141</b> / 130</span>
+                          <span class="progress-number"><b>{{ credit }}</b> / 130</span>
                           <div class="progress sm active">
-                              <dspaniv class="progress-bar progress-bar-striped" style="width:100%"></dspaniv>
+                              <dspaniv id="progress_1" class="progress-bar progress-bar-striped"></dspaniv>
                           </div>
                         </div>
                       </div>
 
                       <div class="row">
                         <div class="progress-group">
-                          <span class="progress-text">2015_컴퓨터 공학과 총합 학점</span>
-                          <span class="progress-number"><b>141</b> / 130</span>
+                          <span class="progress-text">2015_컴퓨터 공학과 전필 학점</span>
+                          <span class="progress-number"><b>{{ major_essential_credit }}</b> / 60</span>
                           <div class="progress sm active">
-                              <dspaniv class="progress-bar progress-bar-striped" style="width:100%"></dspaniv>
+                              <dspaniv id="progress_2" class="progress-bar progress-bar-striped"></dspaniv>
+                          </div>
+                        </div>
+                      </div>
+
+                        <div class="row">
+                        <div class="progress-group">
+                          <span class="progress-text">2015_컴퓨터 공학과 전선 학점</span>
+                          <span class="progress-number"><b>{{ major_choise_credit }}</b> / 30</span>
+                          <div class="progress sm active">
+                              <dspaniv id="progress_3" class="progress-bar progress-bar-striped"></dspaniv>
                           </div>
                         </div>
                       </div>
@@ -93,5 +115,18 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
+<script>
+    $(document).ready(function(){
+        var major_essential_count = {{ major_essential_credit }}
+        var major_choise_count = {{ major_choise_credit }}
+        var major_essential_width = major_essential_count/60*100
+        var major_choise_width = major_choise_count/30*100
+        var total = {{ credit }}
+        $('#progress_2').width(major_essential_width+'%')
+        $('#progress_3').width(major_choise_width+'%')
+        $('#progress_1').width(total+'%')
+    })
+</script>
 
 {% include "include/footer.html" %}
