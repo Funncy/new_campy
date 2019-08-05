@@ -57,7 +57,7 @@
                             <td>{{ lecture.subject.name }}</td>
                             <td>{{ lecture.professor }}</td>
                             <td>{{ lecture.class_room }}</td>
-                            <td>{% for week in lecture.lecturetime_set.all %}
+                            <td>{% for week in lecture.times.all %}
                                 {{ week.week }} {{ week.start_time }}~{{ week.end_time }}<br>
                             {% endfor %}</td>
                             <td>{{ lecture.opened_year }}/{{ lecture.get_opened_semester_display }}</td>
