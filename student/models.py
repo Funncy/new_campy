@@ -30,7 +30,7 @@ class StudentInfo(models.Model):
         return reverse('mypage', args=[self.id])
 
 class StudentAddedMajor(models.Model):
-    user = models.ForeignKey(User, verbose_name='유저', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name='유저', related_name='add_majors', on_delete=models.CASCADE)
     major_division = models.CharField(verbose_name='전공구분', max_length=20)
     major = models.ForeignKey(Department, verbose_name='전공학과', on_delete=models.CASCADE)
 

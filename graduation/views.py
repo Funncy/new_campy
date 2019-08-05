@@ -8,6 +8,10 @@ from university.mixin import UniversityMixin
 from student.models import StudentInfo
 from .models import SubjectGroup, RuleGeneral, RuleSpecific
 from .forms import SubjectGroupForm, RuleGeneralForm, RuleSpecificForm
+
+from history.models import LectureHistory
+
+from .judge.judge import Judge
 # Create your views here.
 
 '''
@@ -20,7 +24,17 @@ class GraduationDiagnosisTV(DefaultMixin, LoginRequiredMixin, TemplateView):
     #졸업 판정 진행결과 넣기
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['result'] = None
+        context['student'] = StudentInfo.objects.get(user_id=self.request.user.id)
+        judge = Judge()
+        count = LectureHistory.objects.filter(user_id=self.request.user.id).count()
+        context['credit'] = count*3
+        count = LectureHistory.objects.filter(user_id=self.request.user.id, subject__completion_division__name__contains='전공필수').count()
+        context['major_essential_credit'] = count * 3
+        count = LectureHistory.objects.filter(user_id=self.request.user.id,
+                                              subject__completion_division__name__contains='전공선택').count()
+        context['major_choise_credit'] = count * 3
+
+
         return context
 
 '''

@@ -58,22 +58,20 @@ class Lecture(models.Model):
     opened_college = models.CharField(verbose_name='개설단', max_length=50)
     opened_department = models.CharField(verbose_name='개설학과', max_length=50)
 
-    def get_lectures(university_id, division, department):
+    def get_lectures(university_id, division, department, search_name):
         # 특정 이수구분
+        lectures = Lecture.objects.filter(subject__university_id=university_id)
+
         if division:
-            if department:
-                return Lecture.objects.filter(subject__university_id=university_id,
-                                              subject__completion_division_id=division,
-                                              opened_department=department)
-            else:
-                return Lecture.objects.filter(subject__university_id=university_id,
-                                          subject__completion_division_id=division)
-        else:
-            if department:
-                return Lecture.objects.filter(subject__university_id=university_id,
-                                              opened_department=department)
-            else:
-                return Lecture.objects.filter(subject__university_id=university_id)
+            lectures = lectures.filter(subject__completion_division_id=division)
+
+        if department:
+            lectures = lectures.filter(opened_department=department)
+
+        if search_name:
+            lectures = lectures.filter(subject__name__contains=search_name)
+
+        return lectures
 
 class LectureTime(models.Model):
     WEEK_CHOICES = (

@@ -145,9 +145,10 @@ class LectureReadViewset(ReadOnlyModelViewSet):
         #학과, 이수구분으로 데이터 필터링
         division = self.request.query_params.get('division')
         department = self.request.query_params.get('department')
+        search_name = self.request.query_params.get('search_name')
 
         #추가 필터링
 
-        return Lecture.get_lectures(university_id, division, department)
+        return Lecture.get_lectures(university_id, division, department, search_name)
 
 
